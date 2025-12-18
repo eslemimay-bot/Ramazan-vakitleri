@@ -118,6 +118,11 @@
   <div class="takvim-alt-baslik">İftar Saatleri Görünümü</div>
   <div id="takvim" style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center;font-size:12px"></div>
 </div><div class="footer">Bugün satırı vurgulanır 🌸</div><script>
+// === SAYFA YÜKLENDİKTEN SONRA BAŞLAT ===
+window.onload = function(){
+  sehirleriYukle();
+  setInterval(geriSayimlariGuncelle, 1000);
+};
 /********************
  * SABİT ŞEHİRLER
  ********************/
@@ -127,8 +132,7 @@ const SEHIRLER = {
   "Burdur": ["Yeşilova"]
 };
 
-document.addEventListener("DOMContentLoaded", () => {
-  const ilSelect   = document.getElementById("il");
+
   const ilceSelect = document.getElementById("ilce");
   const tabloBody  = document.getElementById("tablo");
 
