@@ -73,7 +73,11 @@
       font-size:12px;
       color:#ddd;
     }
-  </style></head>
+  .ramazan-takvim{background:linear-gradient(135deg,#fdf6e3,#f3e5ab)}
+.takvim-baslik{color:#6a1b9a;font-size:18px;margin-bottom:4px}
+.takvim-alt-baslik{text-align:center;font-size:13px;color:#555;margin-bottom:10px}
+#takvim div{background:#fff;border-radius:10px;box-shadow:0 4px 10px rgba(0,0,0,.1)}
+</style></head>
 <body><h1>🌙 Ramazan Vakitleri</h1>
 <h2>18 Aralık 2025 – 31 Aralık 2026</h2><div class="card">
   <h2>Konum Seç</h2>
@@ -94,8 +98,9 @@
     </thead>
     <tbody id="tablo"></tbody>
   </table>
-</div><div class="card">
-  <h2>📅 Takvim Görünümü</h2>
+</div><div class="card ramazan-takvim">
+  <h2 class="takvim-baslik">🌙 Ramazan Takvimi</h2>
+  <div class="takvim-alt-baslik">İftar Saatleri Görünümü</div>
   <div id="takvim" style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center;font-size:12px"></div>
 </div><div class="footer">Bugün satırı vurgulanır 🌸</div><script>
 /********************
