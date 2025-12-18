@@ -2,106 +2,92 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ramazan Vakitleri 2025–2026</title>  <style>
-body{
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-  margin:0;padding:16px;color:#fff
-}
-h1,h2{text-align:center;margin:8px 0;color:#ffeb3b}
-.card{
-  background:rgba(255,255,255,0.12);
-  backdrop-filter:blur(10px);
-  border-radius:20px;padding:16px;margin-bottom:16px;
-  box-shadow:0 12px 30px rgba(0,0,0,.3)
-}
-select,button{
-  width:100%;padding:12px;border-radius:14px;border:none;
-  margin-top:10px;font-size:16px
-}
-select{background:#fff;color:#333}
-button{
-  background:linear-gradient(135deg,#f9a825,#fdd835);
-  color:#4e342e;font-weight:700
-}
-.countdown{text-align:center;font-size:22px;font-weight:700;color:#ffeb3b}
+  <title>🌙 Ramazan Vakitleri 2025–2026</title>  <style>
+    body{
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+      background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+      margin:0;padding:16px;color:#fff
+    }
+    h1,h2{text-align:center;margin:8px 0;color:#ffeb3b}
+    .card{
+      background:rgba(255,255,255,0.12);
+      backdrop-filter:blur(10px);
+      border-radius:20px;padding:16px;margin-bottom:16px;
+      box-shadow:0 12px 30px rgba(0,0,0,.3)
+    }
+    select,button{
+      width:100%;padding:12px;border-radius:14px;border:none;
+      margin-top:10px;font-size:16px
+    }
+    select{background:#fff;color:#333}
+    button{
+      background:linear-gradient(135deg,#f9a825,#fdd835);
+      color:#4e342e;font-weight:700
+    }
+    .countdown{text-align:center;font-size:22px;font-weight:700;color:#ffeb3b}
 
-#takvim{
-  display:grid;
-  grid-template-columns:repeat(7,1fr);
-  gap:8px
-}
-.gun{
-  background:rgba(255,255,255,.15);
-  border-radius:14px;padding:8px;text-align:center;
-  font-size:12px
-}
-.gun.ramazan{
-  background:linear-gradient(135deg,#fbc02d,#ffeb3b);
-  color:#4e342e;font-weight:700
-}
-.gun.bugun{
-  outline:3px solid #ffeb3b
-}
-.footer{text-align:center;font-size:12px;color:#ddd}
-</style></head>
+    table{width:100%;border-collapse:collapse;color:#fff;font-size:14px}
+    th,td{padding:8px;text-align:center;border-bottom:1px solid rgba(255,255,255,.2)}
+
+    #takvim{
+      display:grid;
+      grid-template-columns:repeat(7,1fr);
+      gap:8px
+    }
+    .gun{
+      background:rgba(255,255,255,.15);
+      border-radius:14px;padding:8px;text-align:center;
+      font-size:12px
+    }
+    .gun.ramazan{
+      background:linear-gradient(135deg,#fbc02d,#ffeb3b);
+      color:#4e342e;font-weight:700
+    }
+    .gun.bugun{
+      outline:3px solid #ffeb3b
+    }
+    .footer{text-align:center;font-size:12px;color:#ddd;margin-top:20px}
+  </style></head>
 <body><h1>🌙 Ramazan Vakitleri</h1>
 <h2>18 Aralık 2025 – 31 Aralık 2026</h2><div class="card">
-  <h2>Konum Seç</h2>
+  <h2>📍 Konum Seç</h2>
   <select id="il"></select>
   <select id="ilce"></select>
   <button onclick="veriIndir()">Vakitleri Yükle</button>
 </div><div class="card">
-  <h2>İftara Kalan Süre</h2>
+  <h2>⏳ İftara Kalan Süre</h2>
   <div id="iftar" class="countdown">--</div>
 </div><div class="card">
-  <h2>Sahura Kalan Süre</h2>
+  <h2>⏳ Sahura Kalan Süre</h2>
   <div id="sahur" class="countdown">--</div>
 </div><div class="card">
-  <h2>Vakit Tablosu</h2>
+  <h2>📄 Günlük Vakitler</h2>
   <table>
     <thead>
       <tr><th>Tarih</th><th>Sahur</th><th>İftar</th></tr>
     </thead>
     <tbody id="tablo"></tbody>
   </table>
-</div><div class="card ramazan-takvim">
-  <h2 class="takvim-baslik">🌙 Ramazan Takvimi</h2>
-  <div class="takvim-alt-baslik">İftar Saatleri Görünümü</div>
-  <div id="takvim" style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center;font-size:12px"></div>
-</div><div class="footer">Bugün satırı vurgulanır 🌸</div><script>
-/********************
- * SABİT ŞEHİRLER
- ********************/
+</div><div class="card">
+  <h2>🌙 Ramazan Takvimi</h2>
+  <div id="takvim"></div>
+</div><div class="footer">Ramazan günleri altın renkle işaretlenmiştir ✨</div><script>
+/***************
+ * ŞEHİRLER
+ ***************/
 const SEHIRLER = {
   "Kayseri": ["Melikgazi"],
   "Antalya": ["Manavgat"],
   "Burdur": ["Yeşilova"]
 };
 
-let ilSelect;
-let ilceSelect;
-let tabloBody;
+let ilSelect, ilceSelect, tabloBody;
 
-/********************
- * SAYFA YÜKLENDİKTEN SONRA
- ********************/
-window.onload = function(){
+window.onload = () => {
   ilSelect   = document.getElementById("il");
   ilceSelect = document.getElementById("ilce");
   tabloBody  = document.getElementById("tablo");
 
-  sehirleriYukle();
-  setInterval(geriSayimlariGuncelle, 1000);
-};
-
-/********************
- * ŞEHİR / İLÇE
- ********************/
-function sehirleriYukle(){
-  if(!ilSelect || !ilceSelect) return;
-
-  ilSelect.innerHTML = "";
   Object.keys(SEHIRLER).forEach(sehir => {
     const opt = document.createElement("option");
     opt.value = sehir;
@@ -109,13 +95,14 @@ function sehirleriYukle(){
     ilSelect.appendChild(opt);
   });
 
+  ilSelect.onchange = ilDegisti;
   ilDegisti();
-}
+  setInterval(geriSayimlariGuncelle, 1000);
+};
 
 function ilDegisti(){
   ilceSelect.innerHTML = "";
-  const secilenIl = ilSelect.value;
-  SEHIRLER[secilenIl].forEach(ilce => {
+  SEHIRLER[ilSelect.value].forEach(ilce => {
     const opt = document.createElement("option");
     opt.value = ilce;
     opt.textContent = ilce;
@@ -123,31 +110,27 @@ function ilDegisti(){
   });
 }
 
-ilSelect?.addEventListener("change", ilDegisti);
-
-/********************
- * VAKİTLERİ İNDİR
- ********************/
+/***************
+ * VERİ ÇEK
+ ***************/
 async function veriIndir(){
-  let tumVakitler = [];
+  let tum = [];
 
   const r2025 = await fetch(`https://api.aladhan.com/v1/calendarByCity/2025/12?city=${ilceSelect.value}&country=Turkey&method=13`);
-  const j2025 = await r2025.json();
-  tumVakitler = tumVakitler.concat(j2025.data);
+  tum = tum.concat((await r2025.json()).data);
 
   for(let ay=1; ay<=12; ay++){
     const r = await fetch(`https://api.aladhan.com/v1/calendarByCity/2026/${ay}?city=${ilceSelect.value}&country=Turkey&method=13`);
-    const j = await r.json();
-    tumVakitler = tumVakitler.concat(j.data);
+    tum = tum.concat((await r.json()).data);
   }
 
-  localStorage.setItem("vakitler", JSON.stringify(tumVakitler));
+  localStorage.setItem("vakitler", JSON.stringify(tum));
   tabloyuDoldur();
 }
 
-/********************
+/***************
  * TABLO + TAKVİM
- ********************/
+ ***************/
 function tabloyuDoldur(){
   const data = JSON.parse(localStorage.getItem("vakitler"));
   if(!data) return;
@@ -156,39 +139,43 @@ function tabloyuDoldur(){
   const takvim = document.getElementById("takvim");
   takvim.innerHTML = "";
 
-  const bas = "2025-12-18";
-  const bit = "2026-12-31";
+  const bas = new Date("2025-12-18");
+  const bit = new Date("2026-12-31");
+  const ramBas = new Date("2026-02-19");
+  const ramBit = new Date("2026-03-20");
 
-  data.filter(g => g.date.gregorian.date >= bas && g.date.gregorian.date <= bit)
-      .forEach(g => {
-        const tr = document.createElement("tr");
-        if(g.date.gregorian.date === bugunISO()) tr.classList.add("bugun");
-        tr.innerHTML = `<td>${g.date.gregorian.date}</td><td>${g.timings.Fajr.slice(0,5)}</td><td>${g.timings.Maghrib.slice(0,5)}</td>`;
-        tabloBody.appendChild(tr);
+  data.forEach(g => {
+    const [gun, ay, yil] = g.date.gregorian.date.split("-");
+    const tarih = new Date(`${yil}-${ay}-${gun}`);
+    if(tarih < bas || tarih > bit) return;
 
-        const gunDiv = document.createElement("div");
-        gunDiv.style.background = g.date.gregorian.date === bugunISO()
-          ? "linear-gradient(135deg,#ffe082,#ffca28)"
-          : "#ffffff";
+    const iso = `${yil}-${ay}-${gun}`;
 
-        gunDiv.innerHTML = `
-          <div style="font-size:11px;color:#888">${g.date.gregorian.weekday.en}</div>
-          <div style="font-size:18px;font-weight:700;color:#6a1b9a">${g.date.gregorian.day}</div>
-          <div style="font-size:11px">İftar</div>
-          <div style="font-size:13px;font-weight:600">${g.timings.Maghrib.slice(0,5)}</div>
-        `;
-        takvim.appendChild(gunDiv);
-      });
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>${iso}</td><td>${g.timings.Fajr.slice(0,5)}</td><td>${g.timings.Maghrib.slice(0,5)}</td>`;
+    tabloBody.appendChild(tr);
+
+    const gunDiv = document.createElement("div");
+    gunDiv.className = "gun";
+    if(tarih >= ramBas && tarih <= ramBit) gunDiv.classList.add("ramazan");
+    if(iso === bugunISO()) gunDiv.classList.add("bugun");
+
+    gunDiv.innerHTML = `<div>${gun}.${ay}</div><div>İftar</div><div>${g.timings.Maghrib.slice(0,5)}</div>`;
+    takvim.appendChild(gunDiv);
+  });
 }
 
-/********************
+/***************
  * GERİ SAYIM
- ********************/
+ ***************/
 function geriSayimlariGuncelle(){
   const data = JSON.parse(localStorage.getItem("vakitler"));
   if(!data) return;
 
-  const bugun = data.find(g => g.date.gregorian.date === bugunISO());
+  const bugun = data.find(g => {
+    const [g1,a1,y1] = g.date.gregorian.date.split("-");
+    return `${y1}-${a1}-${g1}` === bugunISO();
+  });
   if(!bugun) return;
 
   geriSayim("iftar", bugun.timings.Maghrib);
@@ -200,14 +187,13 @@ function geriSayim(id, saatStr){
   const [s,d] = saatStr.split(":");
   const hedef = new Date();
   hedef.setHours(s,d,0,0);
-
   const fark = hedef - simdi;
+
   if(fark <= 0){ document.getElementById(id).innerText = "Geçti"; return; }
 
-  const sn = Math.floor(fark/1000);
-  const sa = Math.floor(sn/3600);
-  const dk = Math.floor((sn%3600)/60);
-  document.getElementById(id).innerText = `${sa} sa ${dk} dk`;
+  const dk = Math.floor(fark/60000);
+  const sa = Math.floor(dk/60);
+  document.getElementById(id).innerText = `${sa} sa ${dk%60} dk`;
 }
 
 function bugunISO(){
