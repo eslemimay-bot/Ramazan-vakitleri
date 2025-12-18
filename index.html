@@ -1,136 +1,257 @@
-
-<!DOCTYPE html><html lang="tr">
+<!DOCTYPE html>
+<html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vakitler 2026</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vakitler 2025–2026</title>
+
   <style>
-    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:linear-gradient(135deg,#fce4ec,#e3f2fd);margin:0;padding:16px;color:#333}
+    body{
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+      background:linear-gradient(135deg,#fce4ec,#e3f2fd);
+      margin:0;
+      padding:16px;
+      color:#333
+    }
     h1,h2{text-align:center;margin:8px 0}
-    .card{background:#ffffffcc;border-radius:16px;padding:16px;margin-bottom:16px;box-shadow:0 8px 20px rgba(0,0,0,.08)}
-    select,button{width:100%;padding:10px;border-radius:12px;border:1px solid #ccc;margin-top:8px;font-size:16px}
-    button{background:#ba68c8;color:#fff;border:none}
-    .countdown{text-align:center;font-size:20px;font-weight:600}
-    table{width:100%;border-collapse:collapse;font-size:13px}
-    th,td{padding:6px;text-align:center;border-bottom:1px solid #eee}
+    .card{
+      background:#ffffffcc;
+      border-radius:16px;
+      padding:16px;
+      margin-bottom:16px;
+      box-shadow:0 8px 20px rgba(0,0,0,.08)
+    }
+    select,button{
+      width:100%;
+      padding:10px;
+      border-radius:12px;
+      border:1px solid #ccc;
+      margin-top:8px;
+      font-size:16px
+    }
+    button{
+      background:#ba68c8;
+      color:#fff;
+      border:none
+    }
+    .countdown{
+      text-align:center;
+      font-size:20px;
+      font-weight:600
+    }
+    table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:13px
+    }
+    th,td{
+      padding:6px;
+      text-align:center;
+      border-bottom:1px solid #eee
+    }
     th{background:#f3e5f5}
-    .bugun{background:#fff3cd;font-weight:bold}
-    .footer{text-align:center;font-size:12px;color:#666}
+    .bugun{
+      background:#fff3cd;
+      font-weight:bold
+    }
+    .footer{
+      text-align:center;
+      font-size:12px;
+      color:#666
+    }
   </style>
 </head>
-<body><h1>🌙 Vakitler 2026</h1>
-<h2>Bugünden → 31 Aralık 2026</h2><div class="card">
+
+<body>
+
+<h1>🌙 Vakitler</h1>
+<h2>18 Aralık 2025 → 31 Aralık 2026</h2>
+
+<div class="card">
   <h2>Konum Seç</h2>
   <select id="il"></select>
   <select id="ilce"></select>
-  <button onclick="veriIndir()">2026 Vakitlerini İndir</button>
-</div><div class="card">
+  <button onclick="veriIndir()">Vakitleri İndir</button>
+</div>
+
+<div class="card">
   <h2>İftara Kalan Süre</h2>
   <div id="iftar" class="countdown">--</div>
-</div><div class="card">
+</div>
+
+<div class="card">
   <h2>Sahura Kalan Süre</h2>
   <div id="sahur" class="countdown">--</div>
-</div><div class="card">
+</div>
+
+<div class="card">
   <h2>Günlük Vakitler</h2>
   <table>
-    <thead><tr><th>Tarih</th><th>Sahur</th><th>İftar</th></tr></thead>
+    <thead>
+      <tr>
+        <th>Tarih</th>
+        <th>Sahur</th>
+        <th>İftar</th>
+      </tr>
+    </thead>
     <tbody id="tablo"></tbody>
   </table>
-</div><div class="footer">Bugün satırı vurguludur 🌸</div><script>
-// 🔒 Sabit şehir–ilçe listesi (const)
-const sehirler = {
+</div>
+
+<div class="footer">Bugün satırı vurguludur 🌸</div>
+
+<script>
+/* =======================
+   AYARLAR
+======================= */
+const BASLANGIC = "2025-12-18";
+const BITIS     = "2026-12-31";
+const STORAGE_KEY = "vakitler_2025_2026";
+
+/* Sabit şehirler */
+const SEHIRLER = {
   "Kayseri": ["Melikgazi"],
   "Antalya": ["Manavgat"],
   "Burdur": ["Yeşilova"]
 };
 
-const ilSel = document.getElementById("il");
-const ilceSel = document.getElementById("ilce");
+/* =======================
+   HTML ELEMANLARI
+======================= */
+const ilSelect   = document.getElementById("il");
+const ilceSelect = document.getElementById("ilce");
+const tabloBody  = document.getElementById("tablo");
 
-Object.keys(sehirler).forEach(il => {
-  ilSel.innerHTML += `<option value="${il}">${il}</option>`;
-});
+/* =======================
+   BAŞLANGIÇ
+======================= */
+sehirleriYukle();
+setInterval(geriSayimlariGuncelle, 1000);
+tabloyuDoldur();
+
+/* =======================
+   ŞEHİR / İLÇE
+======================= */
+function sehirleriYukle(){
+  Object.keys(SEHIRLER).forEach(sehir=>{
+    ilSelect.innerHTML += `<option>${sehir}</option>`;
+  });
+  ilDegisti();
+}
+
+ilSelect.onchange = ilDegisti;
 
 function ilDegisti(){
-  ilceSel.innerHTML = "";
-  sehirler[ilSel.value].forEach(ilce => {
-    ilceSel.innerHTML += `<option value="${ilce}">${ilce}</option>`;
+  ilceSelect.innerHTML = "";
+  SEHIRLER[ilSelect.value].forEach(ilce=>{
+    ilceSelect.innerHTML += `<option>${ilce}</option>`;
   });
 }
 
-ilSel.onchange = ilDegisti;
-ilDegisti();
-
+/* =======================
+   VERİ İNDİRME
+======================= */
 async function veriIndir(){
-  let tum = [];
+  let tumVakitler = [];
+
+  /* 2025 Aralık */
+  const r2025 = await fetch(
+    `https://api.aladhan.com/v1/calendarByCity/2025/12?city=${ilceSelect.value}&country=Turkey&method=13`
+  );
+  const j2025 = await r2025.json();
+  tumVakitler = tumVakitler.concat(j2025.data);
+
+  /* 2026 tüm yıl */
   for(let ay=1; ay<=12; ay++){
-    const r = await fetch(`https://api.aladhan.com/v1/calendarByCity/2026/${ay}?city=${ilceSel.value}&country=Turkey&method=13`);
+    const r = await fetch(
+      `https://api.aladhan.com/v1/calendarByCity/2026/${ay}?city=${ilceSelect.value}&country=Turkey&method=13`
+    );
     const j = await r.json();
-    tum = tum.concat(j.data);
+    tumVakitler = tumVakitler.concat(j.data);
   }
-  localStorage.setItem('vakitler2026', JSON.stringify(tum));
-  tabloDoldur();
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(tumVakitler));
+  tabloyuDoldur();
 }
 
-function tabloDoldur(){
-  const data = JSON.parse(localStorage.getItem('vakitler2026'));
+/* =======================
+   TABLO
+======================= */
+function tabloyuDoldur(){
+  const data = vakitleriGetir();
   if(!data) return;
 
-  const tbody = document.getElementById('tablo');
-  tbody.innerHTML = "";
-
-  const bugun = new Date();
-  const bugunStr = bugun.toISOString().split('T')[0];
+  tabloBody.innerHTML = "";
 
   data
-    .filter(g => g.date.gregorian.date >= bugunStr)
-    .forEach(g => {
-      const tr = document.createElement('tr');
-      if(g.date.gregorian.date === bugunStr) tr.className = 'bugun';
+    .filter(g =>
+      g.date.gregorian.date >= BASLANGIC &&
+      g.date.gregorian.date <= BITIS
+    )
+    .forEach(g=>{
+      const tr = document.createElement("tr");
+      if(g.date.gregorian.date === bugunISO()){
+        tr.classList.add("bugun");
+      }
       tr.innerHTML = `
         <td>${g.date.gregorian.date}</td>
         <td>${g.timings.Fajr.slice(0,5)}</td>
         <td>${g.timings.Maghrib.slice(0,5)}</td>
       `;
-      tbody.appendChild(tr);
+      tabloBody.appendChild(tr);
     });
 }
 
-function geriSayim(){
-  const data = JSON.parse(localStorage.getItem('vakitler2026'));
+/* =======================
+   GERİ SAYIM
+======================= */
+function geriSayimlariGuncelle(){
+  const data = vakitleriGetir();
   if(!data) return;
 
-  const bugunStr = new Date().toISOString().split('T')[0];
-  const g = data.find(x => x.date.gregorian.date === bugunStr);
-  if(!g) return;
+  const bugun = data.find(
+    g => g.date.gregorian.date === bugunISO()
+  );
+  if(!bugun) return;
 
-  hesap('iftar', g.timings.Maghrib);
-  hesap('sahur', g.timings.Fajr);
+  geriSayim("iftar", bugun.timings.Maghrib);
+  geriSayim("sahur", bugun.timings.Fajr);
 }
 
-function hesap(id, saat){
+function geriSayim(id, saatStr){
   const simdi = new Date();
-  const [h,m] = saat.split(':');
+  const [h,m] = saatStr.split(":");
   const hedef = new Date();
-  hedef.setHours(h, m, 0, 0);
+  hedef.setHours(h,m,0,0);
 
-  let fark = hedef - simdi;
+  const fark = hedef - simdi;
   if(fark <= 0){
-    document.getElementById(id).innerText = 'Geçti';
+    document.getElementById(id).innerText = "Geçti";
     return;
   }
 
   const s = Math.floor(fark/1000);
+  const sa = Math.floor(s/3600);
   const dk = Math.floor((s%3600)/60);
   const sn = s%60;
-  const sa = Math.floor(s/3600);
 
-  document.getElementById(id).innerText = `${sa} sa ${dk} dk ${sn} sn`;
+  document.getElementById(id).innerText =
+    `${sa} sa ${dk} dk ${sn} sn`;
 }
 
-setInterval(geriSayim, 1000);
-tabloDoldur();
-</script></body>
+/* =======================
+   YARDIMCILAR
+======================= */
+function vakitleriGetir(){
+  return JSON.parse(localStorage.getItem(STORAGE_KEY));
+}
+
+function bugunISO(){
+  return new Date().toISOString().split("T")[0];
+}
+</script>
+
+</body>
 </html>
 
 
