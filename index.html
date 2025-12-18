@@ -158,42 +158,52 @@ function sonrakiAy(){
 }
 
 function takvimiCiz(){
-  const takvim=document.getElementById("takvim");
-  takvim.innerHTML="";
-  const yil=gosterilenAy.getFullYear();
-  const ay=gosterilenAy.getMonth();
+  const takvim = document.getElementById("takvim");
+  takvim.innerHTML = "";
+
+  const yil = gosterilenAy.getFullYear();
+  const ay  = gosterilenAy.getMonth();
 
   document.getElementById("ayBaslik").innerText =
     gosterilenAy.toLocaleDateString("tr-TR",{month:"long",year:"numeric"});
 
-  const gunSayisi=new Date(yil,ay+1,0).getDate();
+  const gunSayisi = new Date(yil, ay+1, 0).getDate();
+
   for(let g=1; g<=gunSayisi; g++){
-    const iso=`${yil}-${String(ay+1).padStart(2,"0")}-${String(g).padStart(2,"0")}`;
-    const div=document.createElement("div");
-    div.className="day";
+    const iso = `${yil}-${String(ay+1).padStart(2,"0")}-${String(g).padStart(2,"0")}`;
+    const div = document.createElement("div");
+    div.className = "day";
 
     const v = VAKITLER[aktifSehir][iso];
+
     if(v?.ramazan) div.classList.add("ramazan");
-    if(iso===bugunISO()) div.classList.add("today");
+    if(iso === bugunISO()) div.classList.add("today");
 
-    div.innerHTML = `<b>${g}</b><br>${v ? "İftar "+v.iftar : ""}`;
+    div.innerHTML = `<b>${g}</b><br>${v ? "İftar " + v.iftar : ""}`;
 
-    if(v){
-      div.style.cursor="pointer";
-      div.onclick = ()=> gunDetayGoster(iso);
-    }
+    /* HER GÜN TIKLANABİLİR */
+    div.style.cursor = "pointer";
+    div.onclick = ()=> gunDetayGoster(iso);
 
     takvim.appendChild(div);
   }
 }
 
 function gunDetayGoster(tarih){
+  const kart = document.getElementById("gunDetay");
+  kart.style.display = "block";
+
   const v = VAKITLER[aktifSehir][tarih];
-  if(!v) return;
-  document.getElementById("gunDetay").style.display="block";
-  document.getElementById("gunTarih").innerText=tarih;
-  document.getElementById("detaySahur").innerText=v.sahur;
-  document.getElementById("detayIftar").innerText=v.iftar;
+  document.getElementById("gunTarih").innerText = tarih;
+
+  if(!v){
+    document.getElementById("detaySahur").innerText = "Eklenmedi";
+    document.getElementById("detayIftar").innerText = "Eklenmedi";
+    return;
+  }
+
+  document.getElementById("detaySahur").innerText = v.sahur;
+  document.getElementById("detayIftar").innerText = v.iftar;
 }
 
 function geriSayim(){
