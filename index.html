@@ -1,141 +1,104 @@
-
 <!DOCTYPE html><html lang="tr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ramazan Vakitleri 2026</title>
+  <title>Vakitler 2026</title>
   <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: linear-gradient(135deg, #fce4ec, #e3f2fd);
-      margin: 0;
-      padding: 16px;
-      color: #333;
-    }
-    .card {
-      background: #ffffffcc;
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 16px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-    }
-    h1, h2 {
-      text-align: center;
-      margin: 8px 0;
-    }
-    h1 { font-size: 24px; }
-    h2 { font-size: 18px; color: #555; }
-    .countdown {
-      text-align: center;
-      font-size: 20px;
-      font-weight: 600;
-      margin-top: 8px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 14px;
-    }
-    th, td {
-      padding: 8px;
-      text-align: center;
-      border-bottom: 1px solid #eee;
-    }
-    th { background: #f3e5f5; }
-    .footer {
-      text-align: center;
-      font-size: 12px;
-      color: #666;
-      margin-top: 16px;
-    }
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:linear-gradient(135deg,#fce4ec,#e3f2fd);margin:0;padding:16px;color:#333}
+    h1,h2{text-align:center;margin:8px 0}
+    .card{background:#ffffffcc;border-radius:16px;padding:16px;margin-bottom:16px;box-shadow:0 8px 20px rgba(0,0,0,.08)}
+    select,button{width:100%;padding:10px;border-radius:12px;border:1px solid #ccc;margin-top:8px;font-size:16px}
+    button{background:#ba68c8;color:#fff;border:none}
+    .countdown{text-align:center;font-size:20px;font-weight:600}
+    table{width:100%;border-collapse:collapse;font-size:13px}
+    th,td{padding:6px;text-align:center;border-bottom:1px solid #eee}
+    th{background:#f3e5f5}
+    .bugun{background:#fff3cd;font-weight:bold}
+    .footer{text-align:center;font-size:12px;color:#666}
   </style>
 </head>
-<body><h1>🌙 Ramazan Vakitleri 2026</h1>
-<h2>Kayseri / Melikgazi (Diyanet)</h2><div class="card">
+<body><h1>🌙 Vakitler 2026</h1>
+<h2>Bugünden → 31 Aralık 2026</h2><div class="card">
+  <h2>Konum Seç</h2>
+  <select id="il"></select>
+  <select id="ilce"></select>
+  <button onclick="veriIndir()">2026 Vakitlerini İndir</button>
+</div><div class="card">
   <h2>İftara Kalan Süre</h2>
-  <div id="iftarSayim" class="countdown">Yükleniyor…</div>
+  <div id="iftar" class="countdown">--</div>
 </div><div class="card">
   <h2>Sahura Kalan Süre</h2>
-  <div id="sahurSayim" class="countdown">Yükleniyor…</div>
+  <div id="sahur" class="countdown">--</div>
 </div><div class="card">
-  <h2>Ramazan 2026 – 30 Günlük Vakitler</h2>
+  <h2>Günlük Vakitler</h2>
   <table>
-    <thead>
-      <tr>
-        <th>Gün</th>
-        <th>Tarih</th>
-        <th>Sahur</th>
-        <th>İftar</th>
-      </tr>
-    </thead>
-    <tbody id="ramazanTablo"></tbody>
+    <thead><tr><th>Tarih</th><th>Sahur</th><th>İftar</th></tr></thead>
+    <tbody id="tablo"></tbody>
   </table>
-</div><div class="footer">Başlangıç: 19 Şubat 2026 🌸</div><script>
-const RAMAZAN_BASLANGIC = new Date(2026, 1, 19); // 19 Şubat 2026
-const RAMAZAN_GUN_SAYISI = 30;
-const tablo = document.getElementById("ramazanTablo");
-let ramazanGunleri = [];
+</div><div class="footer">Bugün satırı vurguludur 🌸</div><script>
+let sehirler={};
+const ilSel=document.getElementById('il');
+const ilceSel=document.getElementById('ilce');
 
-Promise.all([
-  fetch("https://api.aladhan.com/v1/calendarByCity/2026/2?city=Kayseri&country=Turkey&method=13").then(r => r.json()),
-  fetch("https://api.aladhan.com/v1/calendarByCity/2026/3?city=Kayseri&country=Turkey&method=13").then(r => r.json())
-]).then(([subat, mart]) => {
-  const tumGunler = [...subat.data, ...mart.data];
-
-  ramazanGunleri = tumGunler.filter(g => {
-    const [gun, ay, yil] = g.date.gregorian.date.split("-").map(Number);
-    const tarih = new Date(yil, ay - 1, gun);
-    return tarih >= RAMAZAN_BASLANGIC;
-  }).slice(0, RAMAZAN_GUN_SAYISI);
-
-  ramazanGunleri.forEach((g, i) => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${i + 1}</td>
-      <td>${g.date.gregorian.date}</td>
-      <td>${g.timings.Fajr.substring(0,5)}</td>
-      <td>${g.timings.Maghrib.substring(0,5)}</td>
-    `;
-    tablo.appendChild(tr);
-  });
-
-  baslatGeriSayim();
+fetch('https://raw.githubusercontent.com/mustafadalga/turkiye-il-ilce-json/master/il-ilce.json')
+.then(r=>r.json())
+.then(j=>{
+  j.forEach(k=>sehirler[k.il]=k.ilceler);
+  Object.keys(sehirler).forEach(il=>ilSel.innerHTML+=`<option>${il}</option>`);
+  ilDegisti();
 });
 
-function baslatGeriSayim() {
-  setInterval(() => {
-    const simdi = new Date();
-    const gunIndex = Math.floor((simdi - RAMAZAN_BASLANGIC) / (1000 * 60 * 60 * 24));
-
-    if (gunIndex < 0 || gunIndex >= ramazanGunleri.length) {
-      document.getElementById("iftarSayim").innerText = "Ramazan zamanı değil";
-      document.getElementById("sahurSayim").innerText = "Ramazan zamanı değil";
-      return;
-    }
-
-    const bugun = ramazanGunleri[gunIndex].timings;
-
-    guncelleSayim("iftarSayim", bugun.Maghrib);
-    guncelleSayim("sahurSayim", bugun.Fajr);
-  }, 1000);
+function ilDegisti(){
+  ilceSel.innerHTML='';
+  sehirler[ilSel.value].forEach(i=>ilceSel.innerHTML+=`<option>${i}</option>`);
 }
+ilSel.onchange=ilDegisti;
 
-function guncelleSayim(id, saatStr) {
-  const simdi = new Date();
-  const [h, m] = saatStr.split(":");
-  const hedef = new Date();
-  hedef.setHours(h, m, 0);
-
-  let fark = hedef - simdi;
-  if (fark <= 0) {
-    document.getElementById(id).innerText = "Vakit geçti";
-    return;
+async function veriIndir(){
+  let tum=[];
+  for(let ay=1;ay<=12;ay++){
+    const r=await fetch(`https://api.aladhan.com/v1/calendarByCity/2026/${ay}?city=${ilceSel.value}&country=Turkey&method=13`);
+    const j=await r.json();
+    tum=tum.concat(j.data);
   }
-
-  const s = Math.floor(fark / 3600000);
-  const d = Math.floor((fark % 3600000) / 60000);
-  const sn = Math.floor((fark % 60000) / 1000);
-  document.getElementById(id).innerText = `${s} sa ${d} dk ${sn} sn`;
+  localStorage.setItem('vakitler2026',JSON.stringify(tum));
+  tabloDoldur();
 }
+
+function tabloDoldur(){
+  const data=JSON.parse(localStorage.getItem('vakitler2026'));
+  if(!data) return;
+  const tbody=document.getElementById('tablo');
+  tbody.innerHTML='';
+  const bugunStr=new Date().toLocaleDateString('tr-TR').split('.').reverse().join('-');
+
+  data.filter(g=>g.date.gregorian.date>=bugunStr).forEach(g=>{
+    const tr=document.createElement('tr');
+    if(g.date.gregorian.date===bugunStr) tr.className='bugun';
+    tr.innerHTML=`<td>${g.date.gregorian.date}</td><td>${g.timings.Fajr.slice(0,5)}</td><td>${g.timings.Maghrib.slice(0,5)}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function geriSayim(){
+  const data=JSON.parse(localStorage.getItem('vakitler2026'));
+  if(!data) return;
+  const bugunStr=new Date().toLocaleDateString('tr-TR').split('.').reverse().join('-');
+  const g=data.find(x=>x.date.gregorian.date===bugunStr);
+  if(!g) return;
+  hesap('iftar',g.timings.Maghrib);
+  hesap('sahur',g.timings.Fajr);
+}
+
+function hesap(id,s){
+  const simdi=new Date();
+  const [h,m]=s.split(':');
+  const hedef=new Date();hedef.setHours(h,m,0);
+  let f=hedef-simdi;
+  document.getElementById(id).innerText=f<=0?'Geçti':`${Math.floor(f/3600000)} sa ${Math.floor((f%3600000)/60000)} dk ${Math.floor((f%60000)/1000)} sn`;
+}
+
+setInterval(geriSayim,1000);
+tabloDoldur();
 </script></body>
 </html>
