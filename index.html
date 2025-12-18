@@ -51,6 +51,12 @@ h1,h2{text-align:center;color:#ffd54f}
   color:#4e342e;
   font-weight:700
 }
+.countdown{
+  text-align:center;
+  font-size:20px;
+  font-weight:700;
+  color:#ffd54f
+}
 #gunDetay{display:none}
 .footer{text-align:center;font-size:12px;color:#ddd}
 </style>
@@ -60,6 +66,16 @@ h1,h2{text-align:center;color:#ffd54f}
 
 <h1>🌙 Ramazan Vakitleri</h1>
 <h2>1 Ocak 2026 – 31 Aralık 2026</h2>
+
+<div class="card">
+  <div class="countdown">İftara Kalan Süre</div>
+  <div id="iftarSure" class="countdown">—</div>
+</div>
+
+<div class="card">
+  <div class="countdown">Sahura Kalan Süre</div>
+  <div id="sahurSure" class="countdown">—</div>
+</div>
 
 <div class="card">
   <h2 id="ayBaslik"></h2>
@@ -78,11 +94,11 @@ h1,h2{text-align:center;color:#ffd54f}
   <p><b>İftar (Akşam):</b> <span id="detayIftar"></span></p>
 </div>
 
-<div class="footer">Offline • Ramazan günleri altın renkle işaretlidir 🌙</div>
+<div class="footer">Offline • Ramazan günleri altın renklidir 🌙</div>
 
 <script>
 /* ======================
-   OFFLINE VAKİT VERİSİ (ÖRNEK)
+   OFFLINE VAKİT (ÖRNEK)
    ====================== */
 const VAKITLER = {
   "2026-02-19": { sahur:"06:03", iftar:"18:33", ramazan:true },
@@ -90,21 +106,19 @@ const VAKITLER = {
   "2026-02-21": { sahur:"06:01", iftar:"18:35", ramazan:true }
 };
 
-/* ======================
-   TAKVİM KONTROL
-   ====================== */
+/* ====================== */
 let gosterilenAy = new Date(2026,0,1);
 
+/* TAKVİM */
 function takvimiCiz(){
   const takvim = document.getElementById("takvim");
   takvim.innerHTML = "";
 
-  const yil = gosterilenAy.getFullYear();
-  const ay  = gosterilenAy.getMonth();
-
   document.getElementById("ayBaslik").innerText =
     gosterilenAy.toLocaleDateString("tr-TR",{month:"long",year:"numeric"});
 
+  const yil = gosterilenAy.getFullYear();
+  const ay  = gosterilenAy.getMonth();
   const gunSayisi = new Date(yil, ay+1, 0).getDate();
 
   for(let g=1; g<=gunSayisi; g++){
@@ -123,6 +137,7 @@ function takvimiCiz(){
   }
 }
 
+/* GÜN DETAY */
 function gunDetayGoster(t){
   document.getElementById("gunDetay").style.display = "block";
   const [y,m,d] = t.split("-");
@@ -137,19 +152,42 @@ function gunDetayGoster(t){
   }
 }
 
-function oncekiAy(){
-  gosterilenAy.setMonth(gosterilenAy.getMonth()-1);
-  takvimiCiz();
-}
-function sonrakiAy(){
-  gosterilenAy.setMonth(gosterilenAy.getMonth()+1);
-  takvimiCiz();
-}
-function bugunISO(){
-  return new Date().toISOString().split("T")[0];
+/* GERİ SAYIM */
+function geriSayim(){
+  const bugun = bugunISO();
+  const v = VAKITLER[bugun];
+
+  if(!v){
+    document.getElementById("iftarSure").innerText = "—";
+    document.getElementById("sahurSure").innerText = "—";
+    return;
+  }
+
+  hesapla("iftarSure", v.iftar);
+  hesapla("sahurSure", v.sahur);
 }
 
+function hesapla(id, saat){
+  const [h,m] = saat.split(":");
+  const hedef = new Date();
+  hedef.setHours(h,m,0,0);
+
+  let fark = hedef - new Date();
+  if(fark < 0) fark += 86400000;
+
+  const sa = Math.floor(fark / 3600000);
+  const dk = Math.floor((fark % 3600000) / 60000);
+
+  document.getElementById(id).innerText = `${sa} sa ${dk} dk`;
+}
+
+/* NAV */
+function oncekiAy(){ gosterilenAy.setMonth(gosterilenAy.getMonth()-1); takvimiCiz(); }
+function sonrakiAy(){ gosterilenAy.setMonth(gosterilenAy.getMonth()+1); takvimiCiz(); }
+function bugunISO(){ return new Date().toISOString().split("T")[0]; }
+
 takvimiCiz();
+setInterval(geriSayim, 1000);
 </script>
 
 </body>
