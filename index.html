@@ -2,145 +2,162 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kayseri Melikgazi Namaz & Ramazan Vakitleri – Ocak 2026</title><!-- PWA / Ana Ekrana Ekle --><link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0b1d26">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Ramazan Vakitleri"><style>
+<title>Ramazan Vakitleri 2026 (Offline)</title><style>
+:root{
+  --gold:#d4af37;
+  --gold-soft:#f5e6a8;
+  --dark:#0b1d26;
+  --card:rgba(255,255,255,.12);
+}
 body{
-  margin:0;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-  background:linear-gradient(135deg,#0b1d26,#143642);
-  color:#fff;
-  padding:16px
+  margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  background:radial-gradient(circle at top,#1e3c4a,#0b1d26 70%);
+  color:#fff; padding:16px
 }
-h1,h2{text-align:center;color:#ffd54f}
+h1,h2{text-align:center;color:var(--gold)}
+
 .card{
-  background:rgba(255,255,255,.12);
-  backdrop-filter:blur(10px);
-  border-radius:20px;
-  padding:16px;
-  margin-bottom:16px;
-  box-shadow:0 10px 25px rgba(0,0,0,.35)
+  background:var(--card);
+  backdrop-filter:blur(14px);
+  border-radius:22px; padding:18px; margin-bottom:18px;
+  box-shadow:0 15px 40px rgba(0,0,0,.45);
 }
-.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
-.day{
-  background:rgba(255,255,255,.15);
-  border-radius:12px;
-  padding:8px 4px;
-  text-align:center;
-  font-size:13px;
-  cursor:pointer
+
+.today-box{
+  border:2px solid var(--gold);
+  background:linear-gradient(135deg,rgba(212,175,55,.25),rgba(255,255,255,.08));
 }
-.day.today{outline:3px solid #ffd54f}
-.time{
-  display:flex;justify-content:space-between;font-size:18px;margin-top:8px
-}
+
 .countdown{
-  text-align:center;font-size:22px;font-weight:700;color:#ffd54f;margin-top:8px
+  text-align:center; font-size:20px; font-weight:700; color:var(--gold-soft)
 }
-.footer{text-align:center;font-size:12px;color:#ddd}
+.countdown span{display:block;font-size:14px;color:#eee;margin-top:4px}
+
+.month-nav{display:flex;gap:8px}
+.month-nav button{
+  flex:1; padding:12px; border:none; border-radius:14px;
+  background:linear-gradient(135deg,#f9a825,#ffeb3b);
+  font-weight:700; color:#4e342e
+}
+
+.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:10px}
+.day{
+  background:rgba(255,255,255,.12);
+  border-radius:14px; padding:8px; text-align:center;
+  font-size:12px; cursor:pointer; transition:.2s
+}
+.day:hover{transform:scale(1.05)}
+.day.today{outline:3px solid var(--gold)}
+.day.ramazan{
+  background:linear-gradient(135deg,var(--gold),#ffca28);
+  color:#4e342e; font-weight:700
+}
+
+.footer{text-align:center;font-size:12px;color:#ccc;margin-top:10px}
 </style></head>
-<body><h1>🌙 Kayseri Melikgazi</h1>
-<h2>Ocak 2026 • Offline</h2><div class="card">
+<body><!-- Ana Ekrana Ekle Premium Banner --><div id="installBanner" style="display:none;position:fixed;bottom:16px;left:16px;right:16px;z-index:999;">
+  <div style="background:linear-gradient(135deg,#0f2a36,#1c4b5f);border-radius:22px;padding:16px<h1>🌙 Ramazan Vakitleri</h1>
+<h2>2026 • Offline</h2><!-- BUGÜN KUTUSU --><div class="card today-box">
+  <h2 id="bugunBaslik"></h2>
+  <div class="countdown" id="bugunIftar"></div>
+  <div class="countdown" id="bugunSahur"></div>
+</div><!-- TAKVİM --><div class="card">
+  <h2 id="ayBaslik"></h2>
+  <div class="month-nav">
+    <button onclick="oncekiAy()">◀ Önceki Ay</button>
+    <button onclick="sonrakiAy()">Sonraki Ay ▶</button>
+  </div>
   <div id="takvim" class="calendar"></div>
-</div><div class="card" id="gunDetay" style="display:none">
-  <h2 id="gunTarih"></h2>  <div class="time">
-    <span><b>Sahur (İmsak)</b></span>
-    <span id="sahurSaat">—</span>
-  </div>
-  <div id="sahurSayac" class="countdown">—</div>  <hr style="opacity:.3;margin:16px 0">  <div class="time">
-    <span><b>İftar (Akşam)</b></span>
-    <span id="iftarSaat">—</span>
-  </div>
-  <div id="iftarSayac" class="countdown">—</div>
-</div><div class="footer">Diyanet verileri birebir • Sahur=İmsak • İftar=Akşam</div><script>
-// ================================
-// KAYSERİ MELİKGAZİ – OCAK 2026
-// ================================
+</div><!-- GÜN DETAY --><div class="card" id="gunDetay" style="display:none">
+  <h2>📿 Seçilen Gün</h2>
+  <p id="gunTarih"></p>
+  <p><b>Sahur (İmsak):</b> <span id="detaySahur">—</span></p>
+  <p><b>İftar (Akşam):</b> <span id="detayIftar">—</span></p>
+</div><div class="footer">Diyanet imsakiyesi mantığı • Offline 🌙</div><script>
+/* ===== KAYSERİ MELİKGAZİ – OCAK 2026 (ÖRNEK) ===== */
 const VAKITLER = {
-  "2026-01-01":{imsak:"06:21",aksam:"17:34"},
-  "2026-01-02":{imsak:"06:21",aksam:"17:34"},
-  "2026-01-03":{imsak:"06:21",aksam:"17:35"},
-  "2026-01-04":{imsak:"06:21",aksam:"17:36"},
-  "2026-01-05":{imsak:"06:21",aksam:"17:37"},
-  "2026-01-06":{imsak:"06:22",aksam:"17:38"},
-  "2026-01-07":{imsak:"06:22",aksam:"17:39"},
-  "2026-01-08":{imsak:"06:22",aksam:"17:40"},
-  "2026-01-09":{imsak:"06:22",aksam:"17:41"},
-  "2026-01-10":{imsak:"06:22",aksam:"17:42"},
-  "2026-01-11":{imsak:"06:22",aksam:"17:43"},
-  "2026-01-12":{imsak:"06:22",aksam:"17:44"},
-  "2026-01-13":{imsak:"06:21",aksam:"17:45"},
-  "2026-01-14":{imsak:"06:21",aksam:"17:46"},
-  "2026-01-15":{imsak:"06:21",aksam:"17:47"},
-  "2026-01-16":{imsak:"06:21",aksam:"17:48"},
-  "2026-01-17":{imsak:"06:21",aksam:"17:49"},
-  "2026-01-18":{imsak:"06:20",aksam:"17:50"}
+  "2026-01-01": { sahur:"06:12", iftar:"17:19" },
+  "2026-01-02": { sahur:"06:12", iftar:"17:20" },
+  "2026-01-03": { sahur:"06:12", iftar:"17:21" },
+  "2026-01-04": { sahur:"06:12", iftar:"17:22" },
+  "2026-01-05": { sahur:"06:12", iftar:"17:23" },
+  "2026-01-06": { sahur:"06:12", iftar:"17:24" },
+  "2026-01-07": { sahur:"06:11", iftar:"17:25" },
+  "2026-01-08": { sahur:"06:11", iftar:"17:26" },
+  "2026-01-09": { sahur:"06:11", iftar:"17:27" },
+  "2026-01-10":{ sahur:"06:11", iftar:"17:28" },
+  "2026-01-11":{ sahur:"06:10", iftar:"17:29" },
+  "2026-01-12":{ sahur:"06:10", iftar:"17:30" },
+  "2026-01-13":{ sahur:"06:10", iftar:"17:31" },
+  "2026-01-14":{ sahur:"06:09", iftar:"17:32" },
+  "2026-01-15":{ sahur:"06:09", iftar:"17:33" },
+  "2026-01-16":{ sahur:"06:09", iftar:"17:34" },
+  "2026-01-17":{ sahur:"06:08", iftar:"17:35" },
+  "2026-01-18":{ sahur:"06:08", iftar:"17:36" }
 };
 
-const takvim=document.getElementById("takvim");
-const gunDetay=document.getElementById("gunDetay");
-const gunTarih=document.getElementById("gunTarih");
-const sahurSaat=document.getElementById("sahurSaat");
-const iftarSaat=document.getElementById("iftarSaat");
-const sahurSayac=document.getElementById("sahurSayac");
-const iftarSayac=document.getElementById("iftarSayac");
-
-let aktifGunISO=null;
-
-function formatTR(d){
-  return d.toLocaleDateString("tr-TR",{day:"numeric",month:"long",year:"numeric"});
-}
-
-// Takvim çiz
-for(let g=1;g<=31;g++){
-  const iso=`2026-01-${String(g).padStart(2,"0")}`;
-  const div=document.createElement("div");
-  div.className="day";
-  div.innerHTML=`<b>${g}</b>`;
-
-  if(iso===bugunISO()) div.classList.add("today");
-
-  if(VAKITLER[iso]){
-    div.onclick=()=>gunSec(iso);
-  }
-  takvim.appendChild(div);
-}
-
-function gunSec(iso){
-  aktifGunISO=iso;
-  const v=VAKITLER[iso];
-  gunDetay.style.display="block";
-  gunTarih.innerText=formatTR(new Date(iso));
-  sahurSaat.innerText=v.imsak;
-  iftarSaat.innerText=v.aksam;
-  guncelle();
-}
-
-function guncelle(){
-  if(!aktifGunISO) return;
-  const v=VAKITLER[aktifGunISO];
-  sahurSayac.innerText="Sahura kalan: "+kalanSure(aktifGunISO,v.imsak);
-  iftarSayac.innerText="İftara kalan: "+kalanSure(aktifGunISO,v.aksam);
-}
-
-function kalanSure(iso,saatStr){
-  const [h,m]=saatStr.split(":").map(Number);
-  const hedef=new Date(iso);
-  hedef.setHours(h,m,0,0);
-  let fark=hedef-new Date();
-  if(fark<0) return "Geçti";
-  const sa=Math.floor(fark/3600000);
-  const dk=Math.floor((fark%3600000)/60000);
-  const sn=Math.floor((fark%60000)/1000);
-  return `${sa} sa ${dk} dk ${sn} sn`;
-}
+let gosterilenAy = new Date(2026,0,1);
 
 function bugunISO(){return new Date().toISOString().split("T")[0];}
 
-setInterval(guncelle,1000);
+function oncekiAy(){gosterilenAy.setMonth(gosterilenAy.getMonth()-1); takvimiCiz();}
+function sonrakiAy(){gosterilenAy.setMonth(gosterilenAy.getMonth()+1); takvimiCiz();}
+
+function takvimiCiz(){
+  const takvim=document.getElementById("takvim"); takvim.innerHTML="";
+  const yil=gosterilenAy.getFullYear(), ay=gosterilenAy.getMonth();
+  document.getElementById("ayBaslik").innerText=
+    gosterilenAy.toLocaleDateString("tr-TR",{month:"long",year:"numeric"});
+
+  const gunSayisi=new Date(yil,ay+1,0).getDate();
+  for(let g=1;g<=gunSayisi;g++){
+    const iso=`${yil}-${String(ay+1).padStart(2,"0")}-${String(g).padStart(2,"0")}`;
+    const div=document.createElement("div"); div.className="day";
+    if(iso===bugunISO()) div.classList.add("today");
+    div.innerHTML=`<b>${g}</b>`;
+    div.onclick=()=>gunDetayGoster(iso);
+    takvim.appendChild(div);
+  }
+}
+
+function gunDetayGoster(iso){
+  const v=VAKITLER[iso];
+  document.getElementById("gunDetay").style.display="block";
+  document.getElementById("gunTarih").innerText=
+    new Date(iso).toLocaleDateString("tr-TR");
+  document.getElementById("detaySahur").innerText=v?v.sahur:"—";
+  document.getElementById("detayIftar").innerText=v?v.iftar:"—";
+}
+
+function geriSayimGuncelle(){
+  const iso=bugunISO(); const v=VAKITLER[iso];
+  document.getElementById("bugunBaslik").innerText=
+    new Date(iso).toLocaleDateString("tr-TR",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+
+  if(!v){
+    document.getElementById("bugunIftar").innerText="İftar: —";
+    document.getElementById("bugunSahur").innerText="Sahur: —";
+    return;
+  }
+
+  document.getElementById("bugunIftar").innerHTML=
+    kalanSure(v.iftar)+"<span>İftara Kalan Süre</span>";
+  document.getElementById("bugunSahur").innerHTML=
+    kalanSure(v.sahur)+"<span>Sahura Kalan Süre</span>";
+}
+
+function kalanSure(saat){
+  const [h,m]=saat.split(":");
+  const hedef=new Date(); hedef.setHours(h,m,0,0);
+  let fark=hedef-new Date(); if(fark<0) fark+=86400000;
+  const sa=Math.floor(fark/3600000);
+  const dk=Math.floor((fark%3600000)/60000);
+  return `${sa} sa ${dk} dk`;
+}
+
+takvimiCiz(); geriSayimGuncelle(); setInterval(geriSayimGuncelle,1000);
 </script></body>
 </html>
+
 
 
