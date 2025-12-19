@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Melikgazi Ramazan 2026</title>
+    <title>Kayseri İmsakiye & Sayaç</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --lila: #DCD0FF;
             --mint: #B2FBA5;
             --dark-purple: #6A1B9A;
-            --white: #ffffff;
-            --bg-gradient-start: #DCD0FF;
+            --bg-gradient-start: #f3e5f5;
             --bg-gradient-end: #ffffff;
         }
 
@@ -24,7 +22,7 @@
             height: 100vh;
             display: flex;
             justify-content: center;
-            overflow: hidden; /* Kaydırmayı engelle */
+            overflow: hidden;
         }
 
         .app-container {
@@ -39,110 +37,114 @@
             box-sizing: border-box;
         }
 
-        /* Arka Plan Dekorasyonları */
+        /* Arka Plan Süsleri */
         .deco-moon {
             position: absolute;
-            top: -40px;
+            top: -50px;
             right: -40px;
-            font-size: 200px;
-            color: rgba(255, 255, 255, 0.4);
+            font-size: 180px;
+            color: rgba(106, 27, 154, 0.05);
             z-index: -1;
             transform: rotate(-20deg);
         }
 
-        .deco-lamp {
-            position: absolute;
-            top: 50px;
-            left: 20px;
-            font-size: 40px;
-            color: rgba(106, 27, 154, 0.3);
-            z-index: -1;
-        }
-
-        /* Başlık Alanı */
         .header {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 30px;
             color: var(--dark-purple);
+            z-index: 2;
         }
 
         .location {
-            font-size: 16px;
+            font-size: 14px;
             letter-spacing: 2px;
             text-transform: uppercase;
-            opacity: 0.8;
+            font-weight: 600;
+            opacity: 0.7;
         }
 
         .title {
-            font-size: 26px;
+            font-size: 24px;
             font-weight: bold;
             margin: 5px 0;
         }
 
-        .day-badge {
+        .badge {
             background-color: var(--dark-purple);
             color: white;
-            padding: 5px 15px;
+            padding: 6px 16px;
             border-radius: 20px;
             font-size: 14px;
             margin-top: 10px;
             display: inline-block;
             font-weight: bold;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: opacity 0.3s;
         }
 
         /* Geri Sayım Dairesi */
-        .countdown-container {
-            margin-top: 40px;
+        .countdown-wrapper {
+            margin-top: 30px;
+            position: relative;
             width: 260px;
             height: 260px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .countdown-circle {
+            width: 100%;
+            height: 100%;
             background: white;
             border-radius: 50%;
-            border: 5px solid var(--mint);
-            box-shadow: 0 0 30px rgba(220, 208, 255, 0.8);
+            border: 6px solid var(--mint);
+            box-shadow: 0 0 25px rgba(178, 251, 165, 0.4);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            position: relative;
         }
 
-        .countdown-label {
+        .label-text {
             font-size: 16px;
-            color: #666;
+            color: #777;
             margin-bottom: 5px;
             font-weight: 500;
         }
 
-        .timer {
-            font-size: 48px;
+        .timer-text {
+            font-size: 46px;
             font-weight: bold;
             color: var(--dark-purple);
             font-family: 'Courier New', Courier, monospace;
             letter-spacing: -2px;
+            line-height: 1;
         }
 
-        /* Kartlar Bölümü */
-        .cards-area {
+        /* Kartlar */
+        .cards-container {
             width: 100%;
-            margin-top: auto; /* En alta it */
+            margin-top: auto;
             margin-bottom: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
 
-        .info-card {
+        .time-card {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 20px 25px;
-            border-radius: 25px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
             transition: transform 0.2s;
         }
 
-        .info-card:hover {
-            transform: scale(1.02);
+        .time-card:active {
+            transform: scale(0.98);
         }
 
         .card-left {
@@ -152,127 +154,127 @@
         }
 
         .card-icon {
-            font-size: 28px;
+            font-size: 26px;
             color: var(--dark-purple);
         }
 
         .card-title {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
             color: var(--dark-purple);
         }
 
         .card-time {
-            font-size: 26px;
+            font-size: 24px;
             font-weight: bold;
             color: var(--dark-purple);
         }
 
-        /* Sahur Kartı Rengi */
-        .sahur-bg {
-            background-color: var(--mint);
-        }
+        .bg-mint { background-color: var(--mint); }
+        .bg-lila { background-color: var(--lila); }
 
-        /* İftar Kartı Rengi */
-        .iftar-bg {
-            background-color: var(--lila);
-        }
-
-        /* Yükleniyor durumu */
-        .hidden {
-            display: none;
-        }
+        .hidden { opacity: 0; }
 
     </style>
 </head>
 <body>
 
     <div class="app-container">
-        <i class="fa-solid fa-moon deco-moon"></i>
-        <i class="fa-solid fa-lightbulb deco-lamp"></i>
+        <i class="fa-solid fa-mosque deco-moon"></i>
 
         <div class="header">
             <div class="location">Kayseri Melikgazi</div>
-            <div class="title">Ramazan İmsakiyesi</div>
-            <div id="day-counter" class="day-badge hidden">Ramazan'ın 1. Günü</div>
+            <div class="title" id="page-title">Vakit Sayacı</div>
+            <div id="ramadan-badge" class="badge hidden">Ramazan</div>
         </div>
 
-        <div class="countdown-container">
-            <div id="status-label" class="countdown-label">Yükleniyor...</div>
-            <div id="countdown-timer" class="timer">--:--:--</div>
+        <div class="countdown-wrapper">
+            <div class="countdown-circle">
+                <div id="target-label" class="label-text">Yükleniyor...</div>
+                <div id="timer-display" class="timer-text">--:--:--</div>
+            </div>
         </div>
 
-        <div class="cards-area">
-            <div class="info-card sahur-bg">
+        <div class="cards-container">
+            <div class="time-card bg-mint">
                 <div class="card-left">
-                    <i class="fa-solid fa-cloud-sun card-icon"></i>
-                    <span class="card-title">SAHUR</span>
+                    <i class="fa-regular fa-sun card-icon"></i>
+                    <span class="card-title">İMSAK (Sahur)</span>
                 </div>
-                <span id="sahur-time" class="card-time">--:--</span>
+                <span id="imsak-val" class="card-time">--:--</span>
             </div>
 
-            <div class="info-card iftar-bg">
+            <div class="time-card bg-lila">
                 <div class="card-left">
                     <i class="fa-solid fa-utensils card-icon"></i>
-                    <span class="card-title">İFTAR</span>
+                    <span class="card-title">İFTAR (Akşam)</span>
                 </div>
-                <span id="iftar-time" class="card-time">--:--</span>
+                <span id="iftar-val" class="card-time">--:--</span>
             </div>
         </div>
     </div>
 
     <script>
-        // ✅ VERİ TABANI (CNN Türk Kayseri Verileri - 2026)
-        const ramazanData = {
-            "19.02.2026": { imsak: "05:56", iftar: "18:26", gun: "1" },
-            "20.02.2026": { imsak: "05:54", iftar: "18:27", gun: "2" },
-            "21.02.2026": { imsak: "05:53", iftar: "18:28", gun: "3" },
-            "22.02.2026": { imsak: "05:52", iftar: "18:30", gun: "4" },
-            "23.02.2026": { imsak: "05:51", iftar: "18:31", gun: "5" },
-            "24.02.2026": { imsak: "05:49", iftar: "18:32", gun: "6" },
-            "25.02.2026": { imsak: "05:48", iftar: "18:33", gun: "7" },
-            "26.02.2026": { imsak: "05:47", iftar: "18:34", gun: "8" },
-            "27.02.2026": { imsak: "05:45", iftar: "18:35", gun: "9" },
-            "28.02.2026": { imsak: "05:44", iftar: "18:36", gun: "10" },
-            "01.03.2026": { imsak: "05:43", iftar: "18:37", gun: "11" },
-            "02.03.2026": { imsak: "05:41", iftar: "18:38", gun: "12" },
-            "03.03.2026": { imsak: "05:40", iftar: "18:39", gun: "13" },
-            "04.03.2026": { imsak: "05:38", iftar: "18:40", gun: "14" },
-            "05.03.2026": { imsak: "05:37", iftar: "18:41", gun: "15" },
-            "06.03.2026": { imsak: "05:35", iftar: "18:42", gun: "16" },
-            "07.03.2026": { imsak: "05:34", iftar: "18:43", gun: "17" },
-            "08.03.2026": { imsak: "05:32", iftar: "18:44", gun: "18" },
-            "09.03.2026": { imsak: "05:31", iftar: "18:45", gun: "19" },
-            "10.03.2026": { imsak: "05:29", iftar: "18:46", gun: "20" },
-            "11.03.2026": { imsak: "05:28", iftar: "18:47", gun: "21" },
-            "12.03.2026": { imsak: "05:26", iftar: "18:48", gun: "22" },
-            "13.03.2026": { imsak: "05:25", iftar: "18:49", gun: "23" },
-            "14.03.2026": { imsak: "05:23", iftar: "18:50", gun: "24" },
-            "15.03.2026": { imsak: "05:21", iftar: "18:51", gun: "25" },
-            "16.03.2026": { imsak: "05:20", iftar: "18:52", gun: "26" },
-            "17.03.2026": { imsak: "05:18", iftar: "18:53", gun: "27" },
-            "18.03.2026": { imsak: "05:17", iftar: "18:54", gun: "28" },
-            "19.03.2026": { imsak: "05:15", iftar: "18:55", gun: "29" }
+        // ✅ VERİ LİSTESİ
+        // 1. Kısım: BUGÜN ve Önümüzdeki Günler (Kayseri Aralık 2025 Güncel Verisi)
+        // 2. Kısım: RAMAZAN 2026 (Senin attığın CNN Türk Listesi)
+        
+        const takvim = {
+            // --- ARALIK 2025 (Test ve Kullanım İçin) ---
+            "19.12.2025": { imsak: "06:14", iftar: "17:28", tur: "normal" }, // Bugün
+            "20.12.2025": { imsak: "06:15", iftar: "17:29", tur: "normal" },
+            "21.12.2025": { imsak: "06:15", iftar: "17:29", tur: "normal" }, // En uzun gece
+            "22.12.2025": { imsak: "06:16", iftar: "17:30", tur: "normal" },
+            "23.12.2025": { imsak: "06:16", iftar: "17:30", tur: "normal" },
+            "24.12.2025": { imsak: "06:17", iftar: "17:31", tur: "normal" },
+            "25.12.2025": { imsak: "06:17", iftar: "17:31", tur: "normal" },
+            "26.12.2025": { imsak: "06:18", iftar: "17:32", tur: "normal" },
+            
+            // --- RAMAZAN 2026 (Senin Görselindeki Veriler - Birebir) ---
+            "19.02.2026": { imsak: "05:56", iftar: "18:26", tur: "ramazan", gun: 1 },
+            "20.02.2026": { imsak: "05:54", iftar: "18:27", tur: "ramazan", gun: 2 },
+            "21.02.2026": { imsak: "05:53", iftar: "18:28", tur: "ramazan", gun: 3 },
+            "22.02.2026": { imsak: "05:52", iftar: "18:30", tur: "ramazan", gun: 4 },
+            "23.02.2026": { imsak: "05:51", iftar: "18:31", tur: "ramazan", gun: 5 },
+            "24.02.2026": { imsak: "05:49", iftar: "18:32", tur: "ramazan", gun: 6 },
+            "25.02.2026": { imsak: "05:48", iftar: "18:33", tur: "ramazan", gun: 7 },
+            "26.02.2026": { imsak: "05:47", iftar: "18:34", tur: "ramazan", gun: 8 },
+            "27.02.2026": { imsak: "05:45", iftar: "18:35", tur: "ramazan", gun: 9 },
+            "28.02.2026": { imsak: "05:44", iftar: "18:36", tur: "ramazan", gun: 10 },
+            "01.03.2026": { imsak: "05:43", iftar: "18:37", tur: "ramazan", gun: 11 },
+            "02.03.2026": { imsak: "05:41", iftar: "18:38", tur: "ramazan", gun: 12 },
+            "03.03.2026": { imsak: "05:40", iftar: "18:39", tur: "ramazan", gun: 13 },
+            "04.03.2026": { imsak: "05:38", iftar: "18:40", tur: "ramazan", gun: 14 },
+            "05.03.2026": { imsak: "05:37", iftar: "18:41", tur: "ramazan", gun: 15 },
+            "06.03.2026": { imsak: "05:35", iftar: "18:42", tur: "ramazan", gun: 16 },
+            "07.03.2026": { imsak: "05:34", iftar: "18:43", tur: "ramazan", gun: 17 },
+            "08.03.2026": { imsak: "05:32", iftar: "18:44", tur: "ramazan", gun: 18 },
+            "09.03.2026": { imsak: "05:31", iftar: "18:45", tur: "ramazan", gun: 19 },
+            "10.03.2026": { imsak: "05:29", iftar: "18:46", tur: "ramazan", gun: 20 },
+            "11.03.2026": { imsak: "05:28", iftar: "18:47", tur: "ramazan", gun: 21 },
+            "12.03.2026": { imsak: "05:26", iftar: "18:48", tur: "ramazan", gun: 22 },
+            "13.03.2026": { imsak: "05:25", iftar: "18:49", tur: "ramazan", gun: 23 },
+            "14.03.2026": { imsak: "05:23", iftar: "18:50", tur: "ramazan", gun: 24 },
+            "15.03.2026": { imsak: "05:21", iftar: "18:51", tur: "ramazan", gun: 25 },
+            "16.03.2026": { imsak: "05:20", iftar: "18:52", tur: "ramazan", gun: 26 },
+            "17.03.2026": { imsak: "05:18", iftar: "18:53", tur: "ramazan", gun: 27 },
+            "18.03.2026": { imsak: "05:17", iftar: "18:54", tur: "ramazan", gun: 28 },
+            "19.03.2026": { imsak: "05:15", iftar: "18:55", tur: "ramazan", gun: 29 }
         };
 
-        // DOM Elemanları
-        const labelEl = document.getElementById('status-label');
-        const timerEl = document.getElementById('countdown-timer');
-        const imsakEl = document.getElementById('sahur-time');
-        const iftarEl = document.getElementById('iftar-time');
-        const dayBadgeEl = document.getElementById('day-counter');
+        // Elemanları Seç
+        const lblTitle = document.getElementById('page-title');
+        const lblTarget = document.getElementById('target-label');
+        const lblTimer = document.getElementById('timer-display');
+        const badge = document.getElementById('ramadan-badge');
+        const valImsak = document.getElementById('imsak-val');
+        const valIftar = document.getElementById('iftar-val');
 
         function formatTwoDigits(num) {
             return num.toString().padStart(2, '0');
         }
 
-        // String tarihi (DD.MM.YYYY) Date objesine çevirir
-        function parseDateString(dateStr) {
-            const parts = dateStr.split('.');
-            return new Date(parts[2], parts[1] - 1, parts[0]);
-        }
-
-        // Saat stringini (HH:mm) o günün Date objesine ekler
+        // Tarih ve Saat Oluşturucu
         function createDateTime(baseDate, timeStr) {
             const parts = timeStr.split(':');
             const newDate = new Date(baseDate);
@@ -280,89 +282,98 @@
             return newDate;
         }
 
-        function updateTimer() {
+        function updateApp() {
             let now = new Date();
+            
+            // TEST ETMEK İSTERSEN AŞAĞIDAKİ // İŞARETİNİ KALDIR:
+            // now = new Date(2026, 1, 19, 15, 0, 0); // 19 Şubat 2026 simülasyonu
 
-            // 🛠️ TEST MODU: 2026'da nasıl görüneceğini test etmek için 
-            // aşağıdaki satırın başındaki // işaretlerini kaldır.
-            // now = new Date(2026, 1, 19, 15, 0, 0); // 19 Şubat 2026, Saat 15:00
+            const d = formatTwoDigits(now.getDate());
+            const m = formatTwoDigits(now.getMonth() + 1);
+            const y = now.getFullYear();
+            const dateKey = `${d}.${m}.${y}`;
 
-            const day = formatTwoDigits(now.getDate());
-            const month = formatTwoDigits(now.getMonth() + 1);
-            const year = now.getFullYear();
-            const todayKey = `${day}.${month}.${year}`;
-
-            // Veri yoksa (Ramazan dışı veya farklı yıl)
-            if (!ramazanData[todayKey]) {
-                labelEl.innerText = "Ramazan 2026";
-                timerEl.innerText = "BEKLENİYOR";
-                timerEl.style.fontSize = "32px";
-                imsakEl.innerText = "--:--";
-                iftarEl.innerText = "--:--";
-                dayBadgeEl.classList.add('hidden');
-                
-                // İsteğe bağlı: Ramazan'a kalan günü hesaplatabiliriz ama sade istedin.
+            // Veri Yoksa (Listedeki tarihlerin dışındaysa)
+            if (!takvim[dateKey]) {
+                lblTarget.innerText = "Veri Listede Yok";
+                lblTimer.innerText = "--:--:--";
+                valImsak.innerText = "-";
+                valIftar.innerText = "-";
+                badge.style.opacity = "0";
                 return;
             }
 
-            // Bugünün verileri var
-            const todayData = ramazanData[todayKey];
-            dayBadgeEl.innerText = `Ramazan'ın ${todayData.gun}. Günü`;
-            dayBadgeEl.classList.remove('hidden');
+            const data = takvim[dateKey];
             
-            imsakEl.innerText = todayData.imsak;
-            iftarEl.innerText = todayData.iftar;
+            // Ekrana saatleri bas
+            valImsak.innerText = data.imsak;
+            valIftar.innerText = data.iftar;
 
-            // Zaman hesaplamaları
-            const imsakTime = createDateTime(now, todayData.imsak);
-            const iftarTime = createDateTime(now, todayData.iftar);
-
-            let targetTime;
-            let labelText = "";
-
-            if (now < imsakTime) {
-                // Sahura daha var
-                targetTime = imsakTime;
-                labelText = "Sahura Kalan Süre";
-            } else if (now >= imsakTime && now < iftarTime) {
-                // Oruç vakti, İftara say
-                targetTime = iftarTime;
-                labelText = "İftara Kalan Süre";
+            // Ramazan mı Normal Gün mü kontrolü
+            if (data.tur === "ramazan") {
+                badge.innerText = `Ramazan'ın ${data.gun}. Günü`;
+                badge.style.opacity = "1";
+                lblTitle.innerText = "Hayırlı Ramazanlar";
             } else {
-                // İftar geçti, yarına (Sahura) say
-                const tomorrow = new Date(now);
-                tomorrow.setDate(tomorrow.getDate() + 1);
-                const tDay = formatTwoDigits(tomorrow.getDate());
-                const tMonth = formatTwoDigits(tomorrow.getMonth() + 1);
-                const tYear = tomorrow.getFullYear();
-                const tomorrowKey = `${tDay}.${tMonth}.${tYear}`;
+                // Normal günlerde badge gizli veya tarih yazar
+                badge.innerText = `${d}.${m}.${y}`;
+                badge.style.opacity = "0.7"; // Hafif görünür
+                lblTitle.innerText = "Namaz Vakitleri";
+            }
 
-                if (ramazanData[tomorrowKey]) {
-                    targetTime = createDateTime(tomorrow, ramazanData[tomorrowKey].imsak);
-                    labelText = "Sahura Kalan Süre";
+            // Geri Sayım Mantığı
+            const imsakVakti = createDateTime(now, data.imsak);
+            const iftarVakti = createDateTime(now, data.iftar);
+            
+            let hedefZaman;
+            let hedefMetin = "";
+
+            if (now < imsakVakti) {
+                // Sahura kadar
+                hedefZaman = imsakVakti;
+                hedefMetin = "İmsak Vaktine"; // Normal günse İmsak yazar
+                if(data.tur === "ramazan") hedefMetin = "Sahura Kalan";
+
+            } else if (now >= imsakVakti && now < iftarVakti) {
+                // İftara kadar
+                hedefZaman = iftarVakti;
+                hedefMetin = "Akşam Ezanına"; // Normal günse Akşam yazar
+                if(data.tur === "ramazan") hedefMetin = "İftara Kalan";
+                
+            } else {
+                // İftar geçti, yarına bak
+                const yarin = new Date(now);
+                yarin.setDate(yarin.getDate() + 1);
+                const yd = formatTwoDigits(yarin.getDate());
+                const ym = formatTwoDigits(yarin.getMonth() + 1);
+                const yy = yarin.getFullYear();
+                const yarinKey = `${yd}.${ym}.${yy}`;
+
+                if (takvim[yarinKey]) {
+                    hedefZaman = createDateTime(yarin, takvim[yarinKey].imsak);
+                    hedefMetin = "Yarın İmsak";
+                    if(data.tur === "ramazan" || takvim[yarinKey].tur === "ramazan") {
+                         hedefMetin = "Sahura Kalan";
+                    }
                 } else {
-                    // Liste bitti (Bayram)
-                    labelEl.innerText = "Bayramınız";
-                    timerEl.innerText = "MÜBAREK OLSUN";
-                    timerEl.style.fontSize = "20px";
+                    lblTarget.innerText = "Liste Sonu";
+                    lblTimer.innerText = "BİTTİ";
                     return;
                 }
             }
 
-            // Geri Sayım Hesapla
-            const diff = targetTime - now;
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            // Sayacı Hesapla
+            const fark = hedefZaman - now;
+            const sa = Math.floor((fark % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const dk = Math.floor((fark % (1000 * 60 * 60)) / (1000 * 60));
+            const sn = Math.floor((fark % (1000 * 60)) / 1000);
 
-            labelEl.innerText = labelText;
-            timerEl.innerText = `${formatTwoDigits(hours)}:${formatTwoDigits(minutes)}:${formatTwoDigits(seconds)}`;
-            timerEl.style.fontSize = "48px";
+            lblTarget.innerText = hedefMetin;
+            lblTimer.innerText = `${formatTwoDigits(sa)}:${formatTwoDigits(dk)}:${formatTwoDigits(sn)}`;
         }
 
-        // Her saniye güncelle
-        setInterval(updateTimer, 1000);
-        updateTimer(); // İlk açılışta hemen çalıştır
+        setInterval(updateApp, 1000);
+        updateApp(); 
 
     </script>
 </body>
