@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kayseri İmsakiye & Sayaç</title>
+    <title>Kayseri İmsakiye</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -37,7 +37,7 @@
             box-sizing: border-box;
         }
 
-        /* Arka Plan Süsleri */
+        /* Arka Plan */
         .deco-moon {
             position: absolute;
             top: -50px;
@@ -99,7 +99,7 @@
             background: white;
             border-radius: 50%;
             border: 6px solid var(--mint);
-            box-shadow: 0 0 25px rgba(178, 251, 165, 0.4);
+            box-shadow: 0 0 25px rgba(178, 251, 165, 0.6);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -143,37 +143,21 @@
             transition: transform 0.2s;
         }
 
-        .time-card:active {
-            transform: scale(0.98);
-        }
-
         .card-left {
             display: flex;
             align-items: center;
             gap: 15px;
         }
 
-        .card-icon {
-            font-size: 26px;
-            color: var(--dark-purple);
-        }
-
-        .card-title {
-            font-size: 18px;
-            font-weight: bold;
-            color: var(--dark-purple);
-        }
-
-        .card-time {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--dark-purple);
-        }
+        .card-icon { font-size: 26px; color: var(--dark-purple); }
+        .card-title { font-size: 18px; font-weight: bold; color: var(--dark-purple); }
+        .card-time { font-size: 24px; font-weight: bold; color: var(--dark-purple); }
 
         .bg-mint { background-color: var(--mint); }
         .bg-lila { background-color: var(--lila); }
-
-        .hidden { opacity: 0; }
+        
+        .hidden { display: none; }
+        .debug-date { position: absolute; bottom: 5px; font-size: 10px; color: #ccc; }
 
     </style>
 </head>
@@ -212,25 +196,29 @@
                 <span id="iftar-val" class="card-time">--:--</span>
             </div>
         </div>
+        
+        <div id="debug-date" class="debug-date"></div>
     </div>
 
     <script>
-        // ✅ VERİ LİSTESİ
-        // 1. Kısım: BUGÜN ve Önümüzdeki Günler (Kayseri Aralık 2025 Güncel Verisi)
-        // 2. Kısım: RAMAZAN 2026 (Senin attığın CNN Türk Listesi)
-        
+        // ✅ VERİ LİSTESİ (Aralık 2025 + Ramazan 2026)
         const takvim = {
-            // --- ARALIK 2025 (Test ve Kullanım İçin) ---
+            // --- ARALIK 2025 (Kayseri Güncel) ---
             "19.12.2025": { imsak: "06:14", iftar: "17:28", tur: "normal" }, // Bugün
             "20.12.2025": { imsak: "06:15", iftar: "17:29", tur: "normal" },
-            "21.12.2025": { imsak: "06:15", iftar: "17:29", tur: "normal" }, // En uzun gece
+            "21.12.2025": { imsak: "06:15", iftar: "17:29", tur: "normal" },
             "22.12.2025": { imsak: "06:16", iftar: "17:30", tur: "normal" },
             "23.12.2025": { imsak: "06:16", iftar: "17:30", tur: "normal" },
             "24.12.2025": { imsak: "06:17", iftar: "17:31", tur: "normal" },
             "25.12.2025": { imsak: "06:17", iftar: "17:31", tur: "normal" },
             "26.12.2025": { imsak: "06:18", iftar: "17:32", tur: "normal" },
-            
-            // --- RAMAZAN 2026 (Senin Görselindeki Veriler - Birebir) ---
+            "27.12.2025": { imsak: "06:18", iftar: "17:33", tur: "normal" },
+            "28.12.2025": { imsak: "06:19", iftar: "17:33", tur: "normal" },
+            "29.12.2025": { imsak: "06:19", iftar: "17:34", tur: "normal" },
+            "30.12.2025": { imsak: "06:19", iftar: "17:35", tur: "normal" },
+            "31.12.2025": { imsak: "06:20", iftar: "17:36", tur: "normal" },
+
+            // --- RAMAZAN 2026 (Senin Listene Göre) ---
             "19.02.2026": { imsak: "05:56", iftar: "18:26", tur: "ramazan", gun: 1 },
             "20.02.2026": { imsak: "05:54", iftar: "18:27", tur: "ramazan", gun: 2 },
             "21.02.2026": { imsak: "05:53", iftar: "18:28", tur: "ramazan", gun: 3 },
@@ -262,19 +250,18 @@
             "19.03.2026": { imsak: "05:15", iftar: "18:55", tur: "ramazan", gun: 29 }
         };
 
-        // Elemanları Seç
         const lblTitle = document.getElementById('page-title');
         const lblTarget = document.getElementById('target-label');
         const lblTimer = document.getElementById('timer-display');
         const badge = document.getElementById('ramadan-badge');
         const valImsak = document.getElementById('imsak-val');
         const valIftar = document.getElementById('iftar-val');
+        const debugDate = document.getElementById('debug-date');
 
         function formatTwoDigits(num) {
             return num.toString().padStart(2, '0');
         }
 
-        // Tarih ve Saat Oluşturucu
         function createDateTime(baseDate, timeStr) {
             const parts = timeStr.split(':');
             const newDate = new Date(baseDate);
@@ -285,43 +272,45 @@
         function updateApp() {
             let now = new Date();
             
-            // TEST ETMEK İSTERSEN AŞAĞIDAKİ // İŞARETİNİ KALDIR:
-            // now = new Date(2026, 1, 19, 15, 0, 0); // 19 Şubat 2026 simülasyonu
-
+            // Tarih Kontrolü
             const d = formatTwoDigits(now.getDate());
             const m = formatTwoDigits(now.getMonth() + 1);
             const y = now.getFullYear();
             const dateKey = `${d}.${m}.${y}`;
+            
+            // Debug satırı (Silinebilir)
+            debugDate.innerText = "Sistem Tarihi: " + dateKey;
 
-            // Veri Yoksa (Listedeki tarihlerin dışındaysa)
+            // BUGÜNÜN VERİSİ YOKSA
             if (!takvim[dateKey]) {
-                lblTarget.innerText = "Veri Listede Yok";
+                lblTarget.innerText = "Liste Sonu / Veri Yok";
                 lblTimer.innerText = "--:--:--";
+                lblTimer.style.fontSize = "32px";
                 valImsak.innerText = "-";
                 valIftar.innerText = "-";
-                badge.style.opacity = "0";
+                badge.classList.add('hidden');
+                
+                // Belki gece yarısını geçmiştir, bir önceki günü kontrol et?
+                // Ama şimdilik basit tutalım.
                 return;
             }
 
+            // BUGÜNÜN VERİSİ VAR
             const data = takvim[dateKey];
-            
-            // Ekrana saatleri bas
             valImsak.innerText = data.imsak;
             valIftar.innerText = data.iftar;
 
-            // Ramazan mı Normal Gün mü kontrolü
+            // Rozet Ayarı
             if (data.tur === "ramazan") {
                 badge.innerText = `Ramazan'ın ${data.gun}. Günü`;
-                badge.style.opacity = "1";
+                badge.classList.remove('hidden');
                 lblTitle.innerText = "Hayırlı Ramazanlar";
             } else {
-                // Normal günlerde badge gizli veya tarih yazar
-                badge.innerText = `${d}.${m}.${y}`;
-                badge.style.opacity = "0.7"; // Hafif görünür
-                lblTitle.innerText = "Namaz Vakitleri";
+                badge.classList.add('hidden'); // Normal günse gizle
+                lblTitle.innerText = "Kayseri Namaz Vakitleri";
             }
 
-            // Geri Sayım Mantığı
+            // ZAMAN MANTIĞI
             const imsakVakti = createDateTime(now, data.imsak);
             const iftarVakti = createDateTime(now, data.iftar);
             
@@ -331,17 +320,13 @@
             if (now < imsakVakti) {
                 // Sahura kadar
                 hedefZaman = imsakVakti;
-                hedefMetin = "İmsak Vaktine"; // Normal günse İmsak yazar
-                if(data.tur === "ramazan") hedefMetin = "Sahura Kalan";
-
+                hedefMetin = data.tur === "ramazan" ? "Sahura Kalan" : "İmsak Vaktine";
             } else if (now >= imsakVakti && now < iftarVakti) {
                 // İftara kadar
                 hedefZaman = iftarVakti;
-                hedefMetin = "Akşam Ezanına"; // Normal günse Akşam yazar
-                if(data.tur === "ramazan") hedefMetin = "İftara Kalan";
-                
+                hedefMetin = data.tur === "ramazan" ? "İftara Kalan" : "Akşam Ezanına";
             } else {
-                // İftar geçti, yarına bak
+                // İftar geçti, YARINA bak
                 const yarin = new Date(now);
                 yarin.setDate(yarin.getDate() + 1);
                 const yd = formatTwoDigits(yarin.getDate());
@@ -352,17 +337,18 @@
                 if (takvim[yarinKey]) {
                     hedefZaman = createDateTime(yarin, takvim[yarinKey].imsak);
                     hedefMetin = "Yarın İmsak";
-                    if(data.tur === "ramazan" || takvim[yarinKey].tur === "ramazan") {
+                    // Eğer yarın Ramazan ise
+                    if(takvim[yarinKey].tur === "ramazan") {
                          hedefMetin = "Sahura Kalan";
                     }
                 } else {
-                    lblTarget.innerText = "Liste Sonu";
-                    lblTimer.innerText = "BİTTİ";
+                    lblTarget.innerText = "Veri Bitti";
+                    lblTimer.innerText = "SON";
                     return;
                 }
             }
 
-            // Sayacı Hesapla
+            // SAYACI GÜNCELLE
             const fark = hedefZaman - now;
             const sa = Math.floor((fark % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const dk = Math.floor((fark % (1000 * 60 * 60)) / (1000 * 60));
@@ -370,6 +356,7 @@
 
             lblTarget.innerText = hedefMetin;
             lblTimer.innerText = `${formatTwoDigits(sa)}:${formatTwoDigits(dk)}:${formatTwoDigits(sn)}`;
+            lblTimer.style.fontSize = "46px";
         }
 
         setInterval(updateApp, 1000);
@@ -378,4 +365,3 @@
     </script>
 </body>
 </html>
-
