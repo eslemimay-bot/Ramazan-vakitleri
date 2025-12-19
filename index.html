@@ -2,208 +2,143 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ramazan Vakitleri 2026 (Offline)</title><style>
-:root{
-  --gold:#d4af37;
-  --gold-soft:#f5e6a8;
-  --dark:#0b1d26;
-  --card:rgba(255,255,255,.12);
-}
+<title>Ramazan Vakitleri 2026 (Offline)</title><!-- PWA / ANDROID ONE UI AYARLARI --><meta name="theme-color" content="#f9e8b2">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes"><link rel="manifest" href="manifest.json">
+<link rel="icon" sizes="192x192" href="icon-192.png">
+<link rel="icon" sizes="32x32" href="icon-32.png">
+<link rel="apple-touch-icon" href="icon-192.png"><style>
 body{
-  margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-  background:radial-gradient(circle at top,#1e3c4a,#0b1d26 70%);
-  color:#fff; padding:16px
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  background:linear-gradient(135deg,#fff8e1,#ffffff);
+  color:#4e3b00;
+  padding:16px
 }
-h1,h2{text-align:center;color:var(--gold)}
+
+h1,h2{text-align:center;color:#c9a227}
 
 .card{
-  background:var(--card);
-  backdrop-filter:blur(14px);
-  border-radius:22px; padding:18px; margin-bottom:18px;
-  box-shadow:0 15px 40px rgba(0,0,0,.45);
+  background:rgba(255,255,255,.75);
+  backdrop-filter:blur(18px);
+  border-radius:26px;
+  padding:18px;
+  margin-bottom:18px;
+  box-shadow:0 8px 24px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.6);
 }
 
-.today-box{
-  border:2px solid var(--gold);
-  background:linear-gradient(135deg,rgba(212,175,55,.25),rgba(255,255,255,.08));
-}
+.today-box{border:2px solid #f6d365}
 
 .countdown{
-  text-align:center; font-size:20px; font-weight:700; color:var(--gold-soft)
+  text-align:center;
+  font-size:22px;
+  font-weight:700;
+  color:#c9a227
 }
-.countdown span{display:block;font-size:14px;color:#eee;margin-top:4px}
+.countdown span{display:block;font-size:14px;color:#7a6a2a;margin-top:4px}
 
 .month-nav{display:flex;gap:8px}
 .month-nav button{
-  flex:1; padding:12px; border:none; border-radius:14px;
-  background:linear-gradient(135deg,#f9a825,#ffeb3b);
-  font-weight:700; color:#4e342e
+  flex:1;
+  padding:12px;
+  border:none;
+  border-radius:14px;
+  background:linear-gradient(135deg,#ffe082,#ffd54f);
+  font-weight:700;
+  color:#5d4b00
 }
 
 .calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:10px}
 .day{
-  background:rgba(255,255,255,.12);
-  border-radius:14px; padding:8px; text-align:center;
-  font-size:12px; cursor:pointer; transition:.2s
+  background:#fff7d1;
+  border-radius:14px;
+  padding:8px;
+  text-align:center;
+  font-size:12px;
+  cursor:pointer;
+  box-shadow:0 4px 10px rgba(0,0,0,.08)
 }
-.day:hover{transform:scale(1.05)}
-.day.today{outline:3px solid var(--gold)}
-.day.ramazan{
-  background:linear-gradient(135deg,var(--gold),#ffca28);
-  color:#4e342e; font-weight:700
-}
+.day.today{outline:3px solid #f6d365}
 
-.footer{text-align:center;font-size:12px;color:#ccc;margin-top:10px}
-/* Premium Android Animasyonlar */
+.footer{text-align:center;font-size:12px;color:#8d7a2a}
+
+/* INSTALL BANNER */
 @keyframes floatIn{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,213,79,.6)}70%{box-shadow:0 0 0 18px rgba(255,213,79,0)}100%{box-shadow:0 0 0 0 rgba(255,213,79,0)}}
-
 #installBanner{animation:floatIn .6s ease-out}
 #installBtn{animation:pulse 2s infinite}
-
-.app-badge{
-  position:fixed;top:14px;right:14px;
-  background:linear-gradient(135deg,#ffd54f,#ffb300);
-  color:#4e342e;font-size:11px;font-weight:700;
-  padding:6px 10px;border-radius:999px;
-  box-shadow:0 6px 20px rgba(0,0,0,.35)
-}
-
 </style></head>
-<body><!-- Ana Ekrana Ekle Premium Banner --><div id="installBanner" style="display:none;position:fixed;bottom:16px;left:16px;right:16px;z-index:999;">
-  <div style="background:linear-gradient(135deg,#0f2a36,#1c4b5f);border-radius:22px;padding:16px;box-shadow:0 15px 40px rgba(0,0,0,.45);display:flex;gap:14px;align-items:center;">
+<body><!-- INSTALL BANNER --><div id="installBanner" style="display:none;position:fixed;bottom:16px;left:16px;right:16px;z-index:999;">
+  <div style="background:linear-gradient(135deg,#fff3cd,#f9e8b2);border-radius:22px;padding:16px;display:flex;gap:14px;align-items:center;box-shadow:0 15px 40px rgba(0,0,0,.2)">
     <div style="font-size:34px">🌙</div>
     <div style="flex:1">
-      <div style="font-weight:700;font-size:16px;color:#ffd54f">Ramazan Vakitleri</div>
-      <div style="font-size:13px;color:#e0e0e0">Uygulama gibi kullan • Offline • Bildirim hazır</div>
+      <div style="font-weight:700;font-size:16px">Ramazan Vakitleri</div>
+      <div style="font-size:13px">Offline • Ana ekrana ekle</div>
     </div>
     <button id="installBtn" style="background:linear-gradient(135deg,#ffd54f,#ffb300);border:none;border-radius:14px;padding:10px 14px;font-weight:700;color:#4e342e">Ekle</button>
   </div>
 </div><h1>🌙 Ramazan Vakitleri</h1>
-<h2>2026 • Offline</h2><!-- BUGÜN KUTUSU --><div class="card today-box">
+<h2>2026 • Offline</h2><div class="card today-box">
   <h2 id="bugunBaslik"></h2>
   <div class="countdown" id="bugunIftar"></div>
   <div class="countdown" id="bugunSahur"></div>
-</div><!-- TAKVİM --><div class="card">
+</div><div class="card">
   <h2 id="ayBaslik"></h2>
   <div class="month-nav">
     <button onclick="oncekiAy()">◀ Önceki Ay</button>
     <button onclick="sonrakiAy()">Sonraki Ay ▶</button>
   </div>
   <div id="takvim" class="calendar"></div>
-</div><!-- GÜN DETAY --><div class="card" id="gunDetay" style="display:none">
+</div><div class="card" id="gunDetay" style="display:none">
   <h2>📿 Seçilen Gün</h2>
   <p id="gunTarih"></p>
   <p><b>Sahur (İmsak):</b> <span id="detaySahur">—</span></p>
   <p><b>İftar (Akşam):</b> <span id="detayIftar">—</span></p>
 </div><div class="footer">Diyanet imsakiyesi mantığı • Offline 🌙</div><script>
-/* =====================
-   ANDROID YÜKLEME BANNER + ANİMASYON
-   ===================== */
 let deferredPrompt;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;document.getElementById('installBanner').style.display='block'});
+document.getElementById('installBtn').onclick=async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;document.getElementById('installBanner').style.display='none'};
 
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  const banner = document.getElementById('installBanner');
-  banner.style.display = 'block';
-});
+const VAKITLER={"2026-01-01":{sahur:"06:12",iftar:"17:19"},"2026-01-02":{sahur:"06:12",iftar:"17:20"},"2026-01-03":{sahur:"06:12",iftar:"17:21"},"2026-01-04":{sahur:"06:12",iftar:"17:22"},"2026-01-05":{sahur:"06:12",iftar:"17:23"},"2026-01-06":{sahur:"06:12",iftar:"17:24"},"2026-01-07":{sahur:"06:11",iftar:"17:25"},"2026-01-08":{sahur:"06:11",iftar:"17:26"},"2026-01-09":{sahur:"06:11",iftar:"17:27"},"2026-01-10":{sahur:"06:11",iftar:"17:28"},"2026-01-11":{sahur:"06:10",iftar:"17:29"},"2026-01-12":{sahur:"06:10",iftar:"17:30"},"2026-01-13":{sahur:"06:10",iftar:"17:31"},"2026-01-14":{sahur:"06:09",iftar:"17:32"},"2026-01-15":{sahur:"06:09",iftar:"17:33"},"2026-01-16":{sahur:"06:09",iftar:"17:34"},"2026-01-17":{sahur:"06:08",iftar:"17:35"},"2026-01-18":{sahur:"06:08",iftar:"17:36"}};
 
-document.addEventListener('DOMContentLoaded', () => {
-  const btn = document.getElementById('installBtn');
-  if(!btn) return;
-  btn.addEventListener('click', async () => {
-    if(!deferredPrompt) return;
-    deferredPrompt.prompt();
-    await deferredPrompt.userChoice;
-    document.getElementById('installBanner').style.display = 'none';
-    deferredPrompt = null;
-  });
-});
-
-
-/* ===== KAYSERİ MELİKGAZİ – OCAK 2026 (ÖRNEK) ===== */
-const VAKITLER = {
-  "2026-01-01": { sahur:"06:12", iftar:"17:19" },
-  "2026-01-02": { sahur:"06:12", iftar:"17:20" },
-  "2026-01-03": { sahur:"06:12", iftar:"17:21" },
-  "2026-01-04": { sahur:"06:12", iftar:"17:22" },
-  "2026-01-05": { sahur:"06:12", iftar:"17:23" },
-  "2026-01-06": { sahur:"06:12", iftar:"17:24" },
-  "2026-01-07": { sahur:"06:11", iftar:"17:25" },
-  "2026-01-08": { sahur:"06:11", iftar:"17:26" },
-  "2026-01-09": { sahur:"06:11", iftar:"17:27" },
-  "2026-01-10":{ sahur:"06:11", iftar:"17:28" },
-  "2026-01-11":{ sahur:"06:10", iftar:"17:29" },
-  "2026-01-12":{ sahur:"06:10", iftar:"17:30" },
-  "2026-01-13":{ sahur:"06:10", iftar:"17:31" },
-  "2026-01-14":{ sahur:"06:09", iftar:"17:32" },
-  "2026-01-15":{ sahur:"06:09", iftar:"17:33" },
-  "2026-01-16":{ sahur:"06:09", iftar:"17:34" },
-  "2026-01-17":{ sahur:"06:08", iftar:"17:35" },
-  "2026-01-18":{ sahur:"06:08", iftar:"17:36" }
-};
-
-let gosterilenAy = new Date(2026,0,1);
-
-function bugunISO(){return new Date().toISOString().split("T")[0];}
-
-function oncekiAy(){gosterilenAy.setMonth(gosterilenAy.getMonth()-1); takvimiCiz();}
-function sonrakiAy(){gosterilenAy.setMonth(gosterilenAy.getMonth()+1); takvimiCiz();}
+let gosterilenAy=new Date(2026,0,1);
+function bugunISO(){return new Date().toISOString().split('T')[0];}
+function oncekiAy(){gosterilenAy.setMonth(gosterilenAy.getMonth()-1);takvimiCiz();}
+function sonrakiAy(){gosterilenAy.setMonth(gosterilenAy.getMonth()+1);takvimiCiz();}
 
 function takvimiCiz(){
-  const takvim=document.getElementById("takvim"); takvim.innerHTML="";
-  const yil=gosterilenAy.getFullYear(), ay=gosterilenAy.getMonth();
-  document.getElementById("ayBaslik").innerText=
-    gosterilenAy.toLocaleDateString("tr-TR",{month:"long",year:"numeric"});
-
-  const gunSayisi=new Date(yil,ay+1,0).getDate();
-  for(let g=1;g<=gunSayisi;g++){
-    const iso=`${yil}-${String(ay+1).padStart(2,"0")}-${String(g).padStart(2,"0")}`;
-    const div=document.createElement("div"); div.className="day";
-    if(iso===bugunISO()) div.classList.add("today");
-    div.innerHTML=`<b>${g}</b>`;
-    div.onclick=()=>gunDetayGoster(iso);
-    takvim.appendChild(div);
+  const t=document.getElementById('takvim');t.innerHTML='';
+  const y=gosterilenAy.getFullYear(),a=gosterilenAy.getMonth();
+  document.getElementById('ayBaslik').innerText=gosterilenAy.toLocaleDateString('tr-TR',{month:'long',year:'numeric'});
+  const gs=new Date(y,a+1,0).getDate();
+  for(let g=1;g<=gs;g++){
+    const iso=`${y}-${String(a+1).padStart(2,'0')}-${String(g).padStart(2,'0')}`;
+    const d=document.createElement('div');d.className='day';
+    if(iso===bugunISO())d.classList.add('today');
+    d.innerHTML=`<b>${g}</b>`;d.onclick=()=>gunDetayGoster(iso);
+    t.appendChild(d);
   }
 }
 
 function gunDetayGoster(iso){
   const v=VAKITLER[iso];
-  document.getElementById("gunDetay").style.display="block";
-  document.getElementById("gunTarih").innerText=
-    new Date(iso).toLocaleDateString("tr-TR");
-  document.getElementById("detaySahur").innerText=v?v.sahur:"—";
-  document.getElementById("detayIftar").innerText=v?v.iftar:"—";
+  document.getElementById('gunDetay').style.display='block';
+  document.getElementById('gunTarih').innerText=new Date(iso).toLocaleDateString('tr-TR');
+  document.getElementById('detaySahur').innerText=v?v.sahur:'—';
+  document.getElementById('detayIftar').innerText=v?v.iftar:'—';
 }
+
+function kalanSure(s){const[h,m]=s.split(':');const hdf=new Date();hdf.setHours(h,m,0,0);let f=hdf-new Date();if(f<0)f+=86400000;return Math.floor(f/3600000)+' sa '+Math.floor(f_toggle=(f%3600000)/60000)+' dk';}
 
 function geriSayimGuncelle(){
-  const iso=bugunISO(); const v=VAKITLER[iso];
-  document.getElementById("bugunBaslik").innerText=
-    new Date(iso).toLocaleDateString("tr-TR",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
-
-  if(!v){
-    document.getElementById("bugunIftar").innerText="İftar: —";
-    document.getElementById("bugunSahur").innerText="Sahur: —";
-    return;
-  }
-
-  document.getElementById("bugunIftar").innerHTML=
-    kalanSure(v.iftar)+"<span>İftara Kalan Süre</span>";
-  document.getElementById("bugunSahur").innerHTML=
-    kalanSure(v.sahur)+"<span>Sahura Kalan Süre</span>";
+  const iso=bugunISO();const v=VAKITLER[iso];
+  document.getElementById('bugunBaslik').innerText=new Date(iso).toLocaleDateString('tr-TR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  if(!v){bugunIftar.innerText='İftar: —';bugunSahur.innerText='Sahur: —';return;}
+  bugunIftar.innerHTML=kalanSure(v.iftar)+'<span>İftara Kalan Süre</span>';
+  bugunSahur.innerHTML=kalanSure(v.sahur)+'<span>Sahura Kalan Süre</span>';
 }
 
-function kalanSure(saat){
-  const [h,m]=saat.split(":");
-  const hedef=new Date(); hedef.setHours(h,m,0,0);
-  let fark=hedef-new Date(); if(fark<0) fark+=86400000;
-  const sa=Math.floor(fark/3600000);
-  const dk=Math.floor((fark%3600000)/60000);
-  return `${sa} sa ${dk} dk`;
-}
-
-takvimiCiz(); geriSayimGuncelle(); setInterval(geriSayimGuncelle,1000);
+takvimiCiz();geriSayimGuncelle();setInterval(geriSayimGuncelle,1000);
 </script></body>
 </html>
 
