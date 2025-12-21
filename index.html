@@ -7,184 +7,230 @@
 
 <style>
 :root{
-  --lila:#efe7f6;
-  --mint:#e8f6f1;
-  --gold:#d4af37;
-  --text:#2c2c2c;
+  --lila:#e8dfff;
+  --mint:#e9fff6;
+  --gold:#c9a74a;
+  --text:#3b3553;
 }
+
 body{
   margin:0;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  font-family:"Segoe UI",Roboto,sans-serif;
   background:linear-gradient(180deg,var(--lila),var(--mint));
   color:var(--text);
   padding:16px;
 }
 
-h1{
-  text-align:center;
-  font-size:30px;
-  margin-bottom:6px;
-  color:#5b3f8c;
-}
-h2{
-  text-align:center;
-  font-size:18px;
-  margin-top:0;
-  color:#666;
-}
+h1,h2{text-align:center;margin:6px 0}
 
 .card{
-  background:#fff;
-  border-radius:20px;
-  padding:18px;
-  margin-bottom:16px;
-  box-shadow:0 8px 25px rgba(0,0,0,.08);
-}
-
-.today-box{
-  border:3px solid var(--gold);
-}
-
-.big{
-  font-size:22px;
-  font-weight:700;
-  margin:10px 0;
-}
-
-.list{
-  display:flex;
-  flex-direction:column;
-  gap:14px;
-}
-
-.day-card{
-  border-radius:18px;
+  background:#ffffffcc;
+  border-radius:22px;
   padding:16px;
-  background:#fafafa;
-  border:2px solid #e0e0e0;
-  position:relative;
-}
-
-/* 🌙 RAMAZAN GÜNÜ */
-.day-card.ramazan{
-  border-color:var(--gold);
-  background:linear-gradient(135deg,#fffaf0,#ffffff);
-}
-
-.day-card.ramazan::after{
-  content:"🌙";
-  position:absolute;
-  top:12px;
-  right:14px;
-  font-size:22px;
-  color:var(--gold);
-}
-
-.date{
-  font-size:20px;
-  font-weight:700;
-  margin-bottom:8px;
-}
-
-.times{
-  display:flex;
-  justify-content:space-between;
-  font-size:18px;
-}
-
-.times span{
-  font-weight:700;
-}
-</style>
-</head>
-
-<body>
-
-<h1>🌙 Ramazan Vakitleri</h1>
-<h2>Kayseri • Melikgazi • 2026</h2>
-
-<!-- BUGÜN -->
-<div class="card today-box">
-  <div id="bugunTarih" class="big"></div>
-  <div id="bugunIftar" class="big"></div>
-  <div id="bugunSahur" class="big"></div>
-</div>
-
-<!-- GÜNLER -->
-<div class="card">
-  <div class="list" id="liste"></div>
-</div>
-
-<script>
-/* 📌 ŞİMDİLİK SADECE VERDİĞİN GÜNLER */
-  const VAKITLER = {
-  "2026-01-01": { sahur:"06:21", iftar:"17:34" },
-  "2026-01-02": { sahur:"06:21", iftar:"17:34" },
-  "2026-01-03": { sahur:"06:21", iftar:"17:35" },
-  "2026-01-04": { sahur:"06:21", iftar:"17:36" },
-  "2026-01-05": { sahur:"06:21", iftar:"17:37" },
-  "2026-01-06": { sahur:"06:22", iftar:"17:38" },
-  "2026-01-07": { sahur:"06:22", iftar:"17:39" },
-  "2026-01-08": { sahur:"06:22", iftar:"17:40" },
-  "2026-01-09": { sahur:"06:22", iftar:"17:41" },
-  "2026-01-10":{ sahur:"06:22", iftar:"17:42" },
-  "2026-01-11":{ sahur:"06:22", iftar:"17:43" },
-  "2026-01-12":{ sahur:"06:22", iftar:"17:44" },
-  "2026-01-13":{ sahur:"06:21", iftar:"17:45" },
-  "2026-01-14":{ sahur:"06:21", iftar:"17:46" },
-  "2026-01-15":{ sahur:"06:21", iftar:"17:47" },
-  "2026-01-16":{ sahur:"06:21", iftar:"17:48" },
-  "2026-01-17":{ sahur:"06:21", iftar:"17:49" },
-  "2026-01-18":{ sahur:"06:20", iftar:"17:50" }
-};
-
-/* 🌙 RAMAZAN TARİH ARALIĞI (2026) */
-const RAMAZAN_BASLANGIC = "2026-02-19";
-const RAMAZAN_BITIS    = "2026-03-20";
-
-function isRamazan(iso){
-  return iso >= RAMAZAN_BASLANGIC && iso <= RAMAZAN_BITIS;
-}
-
-function formatDate(iso){
-  return new Date(iso).toLocaleDateString("tr-TR",
-    {day:"numeric",month:"long",year:"numeric"});
-}
-
-function kalanSure(saat){
-  const [h,m]=saat.split(":");
-  const hedef=new Date();
-  hedef.setHours(h,m,0,0);
-  let fark=hedef-new Date();
-  if(fark<0)fark+=86400000;
-  return Math.floor(fark/3600000)+" sa "+
-         Math.floor((fark%3600000)/60000)+" dk";
+  margin-bottom:16px;
+  box-shadow:0 12px 28px rgba(0,0,0,.12);
 }
 
 /* BUGÜN */
-const todayISO=new Date().toISOString().split("T")[0];
-if(VAKITLER[todayISO]){
-  document.getElementById("bugunTarih").innerText=formatDate(todayISO);
-  document.getElementById("bugunIftar").innerText=
-    "İftara kalan: "+kalanSure(VAKITLER[todayISO].iftar);
-  document.getElementById("bugunSahur").innerText=
-    "Sahura kalan: "+kalanSure(VAKITLER[todayISO].sahur);
+.today{
+  border:2px solid var(--gold);
+  background:linear-gradient(135deg,#fff6d6,#ffffff);
 }
 
-/* LİSTE */
-const liste=document.getElementById("liste");
-Object.keys(VAKITLER).forEach(t=>{
-  const v=VAKITLER[t];
-  const div=document.createElement("div");
-  div.className="day-card"+(isRamazan(t)?" ramazan":"");
-  div.innerHTML=`
-    <div class="date">${formatDate(t)}</div>
-    <div class="times">
-      <div>Sahur: <span>${v.sahur}</span></div>
-      <div>İftar: <span>${v.iftar}</span></div>
-    </div>`;
-  liste.appendChild(div);
-});
+.countdown{
+  font-size:20px;
+  font-weight:700;
+  text-align:center;
+  margin:6px 0;
+}
+
+/* RAMAZAN KART */
+.ramazan-card{
+  display:none;
+  align-items:center;
+  gap:12px;
+  padding:14px;
+  border-radius:18px;
+  background:linear-gradient(135deg,#fff3c4,#fff);
+  box-shadow:inset 0 0 0 2px var(--gold),0 8px 24px rgba(0,0,0,.15);
+  margin-bottom:16px;
+}
+
+.hilal{
+  font-size:28px;
+  animation:hilal 2.5s infinite ease-in-out;
+}
+
+@keyframes hilal{
+  0%,100%{transform:scale(1);filter:drop-shadow(0 0 4px gold)}
+  50%{transform:scale(1.15);filter:drop-shadow(0 0 10px gold)}
+}
+
+/* TAKVİM */
+.month-nav{
+  display:flex;
+  gap:10px;
+  margin-bottom:10px;
+}
+.month-nav button{
+  flex:1;
+  padding:10px;
+  border:none;
+  border-radius:14px;
+  background:linear-gradient(135deg,#d9f2e9,#efe9ff);
+  font-weight:700;
+}
+
+.calendar{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:8px;
+}
+
+.day{
+  background:#ffffffaa;
+  border-radius:14px;
+  padding:10px 6px;
+  text-align:center;
+  font-size:13px;
+  cursor:pointer;
+}
+
+.day.today{outline:3px solid var(--gold)}
+
+.day.ramazan{
+  background:linear-gradient(135deg,#ffeaa7,#fff);
+  box-shadow:inset 0 0 0 2px var(--gold);
+}
+
+.footer{
+  text-align:center;
+  font-size:12px;
+  opacity:.7;
+}
+</style>
+</head>
+<body>
+
+<h1>🌙 Ramazan Vakitleri</h1>
+<h2>2026 • Kayseri Melikgazi</h2>
+
+<!-- BUGÜN -->
+<div class="card today">
+  <h2 id="todayTitle"></h2>
+  <div class="countdown" id="iftarCountdown"></div>
+  <div class="countdown" id="sahurCountdown"></div>
+</div>
+
+<!-- RAMAZAN KART -->
+<div id="ramazanCard" class="ramazan-card">
+  <span class="hilal">🌙</span>
+  <div>
+    <strong>Ramazan Ayı</strong><br>
+    <small>Bereket ve huzur zamanı</small>
+  </div>
+</div>
+
+<!-- TAKVİM -->
+<div class="card">
+  <h2 id="monthTitle"></h2>
+  <div class="month-nav">
+    <button onclick="prevMonth()">◀ Önceki</button>
+    <button onclick="nextMonth()">Sonraki ▶</button>
+  </div>
+  <div class="calendar" id="calendar"></div>
+</div>
+
+<!-- GÜN DETAY -->
+<div class="card" id="detail" style="display:none">
+  <h2 id="detailDate"></h2>
+  <p><b>Sahur (İmsak):</b> <span id="detailSahur"></span></p>
+  <p><b>İftar (Akşam):</b> <span id="detailIftar"></span></p>
+</div>
+
+<div class="footer">Offline • Diyanet saatlerine göre</div>
+
+<script>
+/* OCAK 2026 – GÖNDERDİĞİN RESME GÖRE */
+const VAKITLER={
+"2026-01-01":{sahur:"06:21",iftar:"17:34"},
+"2026-01-02":{sahur:"06:21",iftar:"17:34"},
+"2026-01-03":{sahur:"06:21",iftar:"17:35"},
+"2026-01-04":{sahur:"06:21",iftar:"17:36"},
+"2026-01-05":{sahur:"06:21",iftar:"17:36"},
+"2026-01-06":{sahur:"06:22",iftar:"17:37"},
+"2026-01-07":{sahur:"06:22",iftar:"17:39"},
+"2026-01-08":{sahur:"06:22",iftar:"17:40"},
+"2026-01-09":{sahur:"06:22",iftar:"17:41"},
+"2026-01-10":{sahur:"06:22",iftar:"17:42"},
+"2026-01-11":{sahur:"06:22",iftar:"17:43"},
+"2026-01-12":{sahur:"06:22",iftar:"17:44"},
+"2026-01-13":{sahur:"06:21",iftar:"17:45"},
+"2026-01-14":{sahur:"06:21",iftar:"17:46"},
+"2026-01-15":{sahur:"06:21",iftar:"17:47"},
+"2026-01-16":{sahur:"06:21",iftar:"17:48"},
+"2026-01-17":{sahur:"06:21",iftar:"17:49"},
+"2026-01-18":{sahur:"06:20",iftar:"17:50"}
+};
+
+let current=new Date(2026,0,1);
+
+function iso(d){return d.toISOString().split("T")[0];}
+
+function render(){
+  const cal=document.getElementById("calendar");
+  cal.innerHTML="";
+  const y=current.getFullYear(),m=current.getMonth();
+  document.getElementById("monthTitle").innerText=
+    current.toLocaleDateString("tr-TR",{month:"long",year:"numeric"});
+
+  document.getElementById("ramazanCard").style.display=
+    (y===2026&&(m===1||m===2))?"flex":"none";
+
+  const days=new Date(y,m+1,0).getDate();
+  for(let d=1;d<=days;d++){
+    const date=new Date(y,m,d);
+    const id=iso(date);
+    const div=document.createElement("div");
+    div.className="day";
+    if(id===iso(new Date())) div.classList.add("today");
+    if(y===2026&&(m===1||m===2)) div.classList.add("ramazan");
+    div.innerHTML=d;
+    div.onclick=()=>showDetail(id);
+    cal.appendChild(div);
+  }
+}
+
+function showDetail(id){
+  const v=VAKITLER[id];
+  document.getElementById("detail").style.display="block";
+  document.getElementById("detailDate").innerText=
+    new Date(id).toLocaleDateString("tr-TR",{weekday:"long",day:"numeric",month:"long"});
+  document.getElementById("detailSahur").innerText=v?v.sahur:"—";
+  document.getElementById("detailIftar").innerText=v?v.iftar:"—";
+}
+
+function countdown(time){
+  if(!time) return "—";
+  const [h,m]=time.split(":");
+  const t=new Date(); t.setHours(h,m,0,0);
+  let diff=t-new Date(); if(diff<0) diff+=86400000;
+  return Math.floor(diff/3600000)+" sa "+Math.floor(diff%3600000/60000)+" dk";
+}
+
+function updateToday(){
+  const today=iso(new Date());
+  document.getElementById("todayTitle").innerText=
+    new Date().toLocaleDateString("tr-TR",{weekday:"long",day:"numeric",month:"long"});
+  const v=VAKITLER[today];
+  document.getElementById("iftarCountdown").innerText="İftara: "+countdown(v?.iftar);
+  document.getElementById("sahurCountdown").innerText="Sahura: "+countdown(v?.sahur);
+}
+
+function prevMonth(){current.setMonth(current.getMonth()-1);render();}
+function nextMonth(){current.setMonth(current.getMonth()+1);render();}
+
+render(); updateToday(); setInterval(updateToday,1000);
 </script>
 
 </body>
